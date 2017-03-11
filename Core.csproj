@@ -30,4 +30,7 @@
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
+  <Target Name="Restore">
+    <Exec Command="dotnet restore" />
+  </Target>
 </Project>
