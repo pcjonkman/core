@@ -5,5 +5,5 @@
 - yo
     - Aspnetcore Spa
     - Aurelia
-    - .csproj
+    - project.json
     - Core
