@@ -2,6 +2,11 @@ var isDevBuild = process.argv.indexOf('--env.prod') < 0;
 var path = require('path');
 var webpack = require('webpack');
 var AureliaWebpackPlugin = require('aurelia-webpack-plugin');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var extractSass = new (require("extract-text-webpack-plugin"))({
+    filename: "[name].css",
+    disable: process.env.NODE_ENV === "development"
+});
 
 var bundleOutputDir = './wwwroot/dist';
 module.exports = {
@@ -17,11 +22,23 @@ module.exports = {
             { test: /\.ts$/, include: /ClientApp/, loader: 'ts-loader', query: { silent: true } },
             { test: /\.html$/, loader: 'html-loader' },
             { test: /\.css$/, loaders: [ 'style-loader', 'css-loader' ] },
+            { test: /\.scss$/,
+                loader: extractSass.extract({
+                    loader: [{
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader"
+                    }],
+                    // use style-loader in development
+                    fallback: "style-loader"
+                })
+            },
             { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
             { test: /\.json$/, loader: 'json-loader' }
         ]
     },
     plugins: [
+        extractSass,
         new webpack.DefinePlugin({ IS_DEV_BUILD: JSON.stringify(isDevBuild) }),
         new webpack.DllReferencePlugin({
             context: __dirname,
