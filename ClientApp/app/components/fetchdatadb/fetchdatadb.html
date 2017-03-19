@@ -1,0 +1,24 @@
+<template>
+    <h1>Posts</h1>
+
+    <p>This component demonstrates fetching data from the database.</p>
+
+    <p if.bind="!blogs"><em>Loading...</em></p>
+
+    <table if.bind="blogs" class="table">
+        <thead>
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Posts</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="blog of blogs">
+                <td>${ blog.firstName }</td>
+                <td>${ blog.lastName }</td>
+                <td><div repeat.for="item of blog.posts">${ item }</div></td>
+            </tr>
+        </tbody>
+    </table>
+</template>

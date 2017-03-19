@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core
 {
@@ -29,6 +31,7 @@ namespace Core
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddDbContext<CoreContext>(opt => opt.UseInMemoryDatabase());
             services.AddMvc();
         }
 
@@ -37,6 +40,9 @@ namespace Core
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            var context = app.ApplicationServices.GetService<CoreContext>();
+            Core.Migrations.DataSeeder.Initialize(context);
 
             if (env.IsDevelopment())
             {

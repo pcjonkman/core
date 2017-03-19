@@ -27,6 +27,13 @@ export class App {
             moduleId: '../fetchdata/fetchdata',
             nav: true,
             title: 'Fetch data'
+        }, {
+            route: 'fetch-data-db',
+            name: 'fetchdatadb',
+            settings: { icon: 'th-list' },
+            moduleId: '../fetchdatadb/fetchdatadb',
+            nav: true,
+            title: 'Fetch data db'
         }]);
 
         this.router = router;
