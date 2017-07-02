@@ -1,62 +1,51 @@
-var isDevBuild = process.argv.indexOf('--env.prod') < 0;
-var path = require('path');
-var webpack = require('webpack');
-var AureliaWebpackPlugin = require('aurelia-webpack-plugin');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var extractSass = new (require("extract-text-webpack-plugin"))({
-    filename: "[name].css",
-    disable: process.env.NODE_ENV === "development"
-});
+const path = require('path');
+const webpack = require('webpack');
+const { AureliaPlugin } = require('aurelia-webpack-plugin');
+const bundleOutputDir = './wwwroot/dist';
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-var bundleOutputDir = './wwwroot/dist';
-module.exports = {
-    resolve: { extensions: [ '.js', '.ts' ] },
-    entry: { 'app': 'aurelia-bootstrapper-webpack' }, // Note: The aurelia-webpack-plugin will add your app's modules to this bundle automatically
-    output: {
-        path: path.resolve(bundleOutputDir),
-        publicPath: '/dist',
-        filename: '[name].js'
-    },
-    module: {
-        loaders: [
-            { test: /\.ts$/, include: /ClientApp/, loader: 'ts-loader', query: { silent: true } },
-            { test: /\.html$/, loader: 'html-loader' },
-            { test: /\.css$/, loaders: [ 'style-loader', 'css-loader' ] },
-            { test: /\.scss$/,
-                loader: extractSass.extract({
-                    loader: [{
-                        loader: "css-loader"
-                    }, {
-                        loader: "sass-loader"
-                    }],
-                    // use style-loader in development
-                    fallback: "style-loader"
-                })
-            },
-            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
-            { test: /\.json$/, loader: 'json-loader' }
-        ]
-    },
-    plugins: [
-        extractSass,
-        new webpack.DefinePlugin({ IS_DEV_BUILD: JSON.stringify(isDevBuild) }),
-        new webpack.DllReferencePlugin({
-            context: __dirname,
-            manifest: require('./wwwroot/dist/vendor-manifest.json')
-        }),
-        new AureliaWebpackPlugin({
-            root: path.resolve('./'),
-            src: path.resolve('./ClientApp'),
-            baseUrl: '/'
-        })
-    ].concat(isDevBuild ? [
-        // Plugins that apply in development builds only
-        new webpack.SourceMapDevToolPlugin({
-            filename: '[file].map', // Remove this line if you prefer inline source maps
-            moduleFilenameTemplate: path.relative(bundleOutputDir, '[resourcePath]') // Point sourcemap entries to the original file locations on disk
-        })
-    ] : [
-        // Plugins that apply in production builds only
-        new webpack.optimize.UglifyJsPlugin()
-    ])
-};
+module.exports = (env) => {
+    const isDevBuild = !(env && env.prod);
+    return [{
+        stats: { modules: false },
+        entry: { 'app': ['aurelia-bootstrapper', './ClientApp/scss/_styles.scss'] },
+        resolve: {
+            extensions: ['.ts', '.js'],
+            modules: ['ClientApp', 'node_modules'],
+        },
+        output: {
+            path: path.resolve(bundleOutputDir),
+            publicPath: '/dist/',
+            filename: '[name].js'
+        },
+        module: {
+            rules: [
+                { test: /\.ts$/i, include: /ClientApp/, use: 'ts-loader?silent=true' },
+                { test: /\.html$/i, use: 'html-loader' },
+                { test: /\.css$/i, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' },
+                { test: /\.(sass|scss)$/i, use: ExtractTextPlugin.extract({ fallback: 'style-loader', use: [isDevBuild ? 'css-loader' : 'css-loader?minimize', isDevBuild ? 'sass-loader' : 'sass-loader?minimize'] }) },
+                { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
+            ]
+        },
+        plugins: [
+            new ExtractTextPlugin({
+                filename: '[name].css',
+                allChunks: true,
+                disable: process.env.NODE_ENV === "development"
+            }),
+            new webpack.DefinePlugin({ IS_DEV_BUILD: JSON.stringify(isDevBuild) }),
+            new webpack.DllReferencePlugin({
+                context: __dirname,
+                manifest: require('./wwwroot/dist/vendor-manifest.json')
+            }),
+            new AureliaPlugin({ aureliaApp: 'boot' })
+        ].concat(isDevBuild ? [
+            new webpack.SourceMapDevToolPlugin({
+                filename: '[file].map', // Remove this line if you prefer inline source maps
+                moduleFilenameTemplate: path.relative(bundleOutputDir, '[resourcePath]')  // Point sourcemap entries to the original file locations on disk
+            })
+        ] : [
+            new webpack.optimize.UglifyJsPlugin()
+        ])
+    }];
+}
