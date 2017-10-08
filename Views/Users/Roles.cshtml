@@ -1,0 +1,52 @@
+@using Core.Models.UsersViewModels
+
+@model Core.Models.UsersViewModels.EditViewModel;
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h2>@ViewData["Title"]</h2>
+<h4>Roles</h4>
+<hr />
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Id)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Id)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.User.ApplicationUser.UserName)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.User.ApplicationUser.UserName)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.User.ApplicationUser.Email)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.User.ApplicationUser.Email)
+    </dd>
+    <dt>
+        Roles
+    </dt>
+    <dd>
+        @foreach(SelectRoleViewModel rvm in Model.User.Roles)
+        {
+            @if (@rvm.Selected) {
+                @rvm.Role.Name <br/>
+            }
+        }
+    </dd>
+</dl>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

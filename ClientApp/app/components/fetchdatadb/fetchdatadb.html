@@ -7,18 +7,63 @@
 
     <table if.bind="blogs" class="table">
         <thead>
-            <tr>
+            <tr if.bind="blogs.length > 0">
                 <th>FirstName</th>
                 <th>LastName</th>
+                <th>Email</th>
+                <th>Roles</th>
                 <th>Posts</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
             <tr repeat.for="blog of blogs">
                 <td>${ blog.firstName }</td>
                 <td>${ blog.lastName }</td>
-                <td><div repeat.for="item of blog.posts">${ item }</div></td>
+                <td>${ blog.user.email }</td>
+                <td><div repeat.for="role of blog.roles">${ role }</div></td>
+                <td><div repeat.for="post of blog.posts"><span if.bind="blog.isLoggedIn" data-toggle="modal" data-target=".confirm-modal-sm" click.delegate="selectDelete(post, blog)" class="glyphicon glyphicon-trash" style="color: red"></span> ${ post.content }</div></td>
+                <!-- <td><div if.bind="blog.isLoggedIn" click.delegate="post(blog)"><span class="glyphicon glyphicon-plus"></span></div></td> -->
+                <td><div if.bind="blog.isLoggedIn" data-toggle="modal" data-target="#modal" click.delegate="selectPost(blog)"><span class="glyphicon glyphicon-plus"></span></div></td>
             </tr>
         </tbody>
     </table>
+
+    <div class="modal fade confirm-modal-sm" tabindex="-1" role="dialog" aria-labelledby="confirmModal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="confirmModalLabel">Delete post</h4>
+                </div>
+                <div class="modal-body">
+                    Confirm delete?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" click.delegate="delete()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalLabel">New blog post</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Message:</label>
+                        <textarea class="form-control" id="message-text" value.bind="blogPost.content"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" click.delegate="post()">Post</button>
+                </div>
+          </div>
+        </div>
+    </div>
 </template>
