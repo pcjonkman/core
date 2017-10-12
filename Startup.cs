@@ -117,8 +117,8 @@ namespace Core
             }
 
 
-            var context = sp.GetService<CoreContext>();
-            context.Database.Migrate();
+            // var context = sp.GetService<CoreContext>();
+            // context.Database.Migrate();
             // // disable nextline for creating first and new migration
             // Core.Migrations.DataSeeder.Initialize(context).Wait();
                 try
