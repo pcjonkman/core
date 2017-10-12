@@ -1,0 +1,10 @@
+@model Core.Models.UsersViewModels.SelectRoleViewModel;
+@Html.HiddenFor(model => model.Role.Id)
+
+
+
+<div>
+    @Html.CheckBoxFor(model => model.Selected)
+    @Html.DisplayFor(model => model.Role.Name)
+</div>
+

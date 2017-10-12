@@ -1,2 +1,2 @@
 [config]
-SCM_SCRIPT_GENERATOR_ARGS=--aspNetCore project.json
+SCM_SCRIPT_GENERATOR_ARGS=--aspNetCore Core.csproj
