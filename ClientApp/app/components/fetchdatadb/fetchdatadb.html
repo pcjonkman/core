@@ -10,7 +10,7 @@
             <tr if.bind="blogs.length > 0">
                 <th>FirstName</th>
                 <th>LastName</th>
-                <th>Email</th>
+                <!-- <th>Email</th> -->
                 <th>Roles</th>
                 <th>Posts</th>
                 <th>&nbsp;</th>
@@ -20,7 +20,7 @@
             <tr repeat.for="blog of blogs">
                 <td>${ blog.firstName }</td>
                 <td>${ blog.lastName }</td>
-                <td>${ blog.user.email }</td>
+                <!-- <td>${ blog.user.email }</td> -->
                 <td><div repeat.for="role of blog.roles">${ role }</div></td>
                 <td><div repeat.for="post of blog.posts"><span if.bind="blog.isLoggedIn" data-toggle="modal" data-target=".confirm-modal-sm" click.delegate="selectDelete(post, blog)" class="glyphicon glyphicon-trash" style="color: red"></span> ${ post.content }</div></td>
                 <!-- <td><div if.bind="blog.isLoggedIn" click.delegate="post(blog)"><span class="glyphicon glyphicon-plus"></span></div></td> -->
