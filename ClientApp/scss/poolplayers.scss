@@ -1,0 +1,14 @@
+#poolplayers {
+  & .user {
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: solid 1px #ccc;
+    padding-bottom: 3px;
+  }
+
+  & .poolplayers {
+    & .poolplayer {
+      cursor: pointer;
+    }
+  }
+}

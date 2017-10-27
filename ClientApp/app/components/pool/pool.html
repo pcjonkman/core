@@ -1,0 +1,67 @@
+<template>
+  <require from="../../services/messageStatusViewEngineHooks"></require>
+  <div id="pool">
+    <h1>Pooltjuh
+      <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.firstLastName }
+      </span>
+    </h1>
+    
+    <p if.bind="!pool"><em>Loading...</em></p>
+
+    <div class="ranking" if.bind="ranking && ranking.length !== 0">
+      <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title">Ranking</h3></div>
+        <table class="table">
+          <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Score</th>
+          </tr>
+          <tr repeat.for="rank of ranking">
+              <td>${ rank.rank }</td>
+              <td>${ rank.name }</td>
+              <td>${ rank.score }</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="new-message pull-right">
+      <button if.bind="pool.user.isLoggedIn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal" click.delegate="selectMessage()"><span class="glyphicon glyphicon-plus"></span> New Message</button>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="messages" if.bind="pool.messages" repeat.for="message of pool.messages">
+      <div class="panel panel-default" if.bind="canManage(pool.user.roles) || message.status === MessageStatus.Approved">
+        <div class="panel-heading">
+          <span if.bind="canManage(pool.user.roles)" click.trigger="approveMessage(message)" class="update-status glyphicon glyphicon-thumbs-${message.status === MessageStatus.Approved ? 'up' : 'down'} ${message.status === MessageStatus.Approved ? 'green' : 'red'} "></span> ${ message.name } <span class="pull-right">${ formatDate(message.placedDate) }</span>
+        </div>
+        <div class="panel-body">
+          ${ message.message }
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="modalLabel">New Message</h4>
+              </div>
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="message-text" class="control-label">Message:</label>
+                      <textarea class="form-control" id="message-text" value.bind="message.message"></textarea>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal" click.delegate="post()" disabled.bind="!message.message">Message</button>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

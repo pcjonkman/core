@@ -1,0 +1,17 @@
+<template>
+  <div id="poolplayers">
+    <h1>Pooltjuh poolplayers
+      <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.firstLastName }
+      </span>
+    </h1>
+    
+    <p if.bind="!pool"><em>Loading...</em></p>
+
+    <div class="poolplayers" if.bind="pool.poolplayers" repeat.for="poolplayer of pool.poolplayers">
+      <div class="poolplayer" click.trigger="selectPoolPlayer(poolplayer)">
+          ${ $index + 1 }) ${ poolplayer.name }
+      </div>
+    </div>
+  </div>
+</template>

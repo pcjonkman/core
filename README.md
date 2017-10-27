@@ -17,6 +17,10 @@
 - dotnet new --install Microsoft.AspNetCore.SpaTemplates::*
 - dotnet new aurelia
 
+## Flags
+- https://github.com/hjnilsson/country-flags
+- https://github.com/lipis/flag-icon-css
+
 ## Fixing error pushing to Azure
 https://github.com/aspnet/Hosting/issues/844
 

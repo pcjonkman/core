@@ -1,0 +1,42 @@
+#schedule {
+  & .nav > li.active > a {
+    color: #337ab7;
+    font-weight: bold;
+  }
+
+  & .tab-content {
+    margin-top: 5px;
+  }
+
+  & .user {
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: solid 1px #ccc;
+    padding-bottom: 3px;
+  }
+
+  & .schedule {
+    & .item {
+      cursor: pointer;
+    }
+
+    & img {
+      border: 1px solid #ccc;
+      width: 30px;
+      border-radius: 4px;
+    }
+
+    & table.group {
+      & th:nth-of-type(2) { width: 250px; }
+    }
+
+    & table.schedule {
+      & th:nth-of-type(1) { width: 60px; }
+      & th:nth-of-type(2) { width: 60px; }
+      & th:nth-of-type(3) { width: 30px; }
+      & th:nth-of-type(4) { width: 200px; }
+      & th:nth-of-type(5) { width: 200px; }
+      & th:nth-of-type(6) { width: 200px; }
+    }
+  }
+}

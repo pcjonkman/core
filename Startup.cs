@@ -117,39 +117,30 @@ namespace Core
             }
 
 
-            // var context = sp.GetService<CoreContext>();
-            // context.Database.Migrate();
-            // // disable nextline for creating first and new migration
-            // Core.Migrations.DataSeeder.Initialize(context).Wait();
-                try
+            try
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
-                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                    {
-                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<CoreContext>().Database.Migrate();
 
-                        serviceScope.ServiceProvider.GetService<CoreContext>().Database.Migrate();
-                        // serviceScope.ServiceProvider.GetService<CoreContext>().SeedData();
+                    // disable next line for creating (first and new) migration
+                    app.SeedData(env.IsDevelopment(), userPassword);
 
-                        app.SeedData(env.IsDevelopment(), userPassword);
 
-                        // var context = serviceScope.ServiceProvider.GetService<CoreContext>();
-                        // context.Database.Migrate();
-                        // DataSeeder.Initialize(context).Wait();
-                        
+                    // var userManager = app.ApplicationServices.GetService<UserManager<ApplicationUser>>();
+                    // var roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
 
-                        // var userManager = app.ApplicationServices.GetService<UserManager<ApplicationUser>>();
-                        // var roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
-
-                        // serviceScope.ServiceProvider.GetService<CoreContext>().EnsureSeedData(userManager, roleManager);
-                    }
+                    // serviceScope.ServiceProvider.GetService<CoreContext>().EnsureSeedData(userManager, roleManager);
                 }
-                catch {
-                    throw new System.Exception("You need to update the DB "
-                        + "\nPM > Update-Database " + "\n or \n" +
-                        "> dotnet ef database update"
-                        + "\nIf that doesn't work, comment out SeedData and "
-                        + "register a new user");                    
-                }
+            }
+            catch {
+                throw new System.Exception("You need to update the DB "
+                    + "\nPM > Update-Database " + "\n or \n" +
+                    "> dotnet ef database update"
+                    + "\nIf that doesn't work, comment out SeedData and "
+                    + "register a new user");
+            }
         }
     }
 }

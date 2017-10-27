@@ -1,7 +1,10 @@
+import 'moment/locale/nl';
 import { Aurelia, PLATFORM } from 'aurelia-framework';
 import { HttpClient, HttpClientConfiguration } from 'aurelia-fetch-client';
 import { Router, RouterConfiguration } from 'aurelia-router';
 import { autoinject } from 'aurelia-framework';
+import * as moment from 'moment';
+import * as toastr from 'toastr';
 
 @autoinject()
 export class App {
@@ -20,13 +23,32 @@ export class App {
                 }
               });
           });
-              
+
+        // Set moment to Dutch locale.
+        moment.locale('nl');
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-bottom-center",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "slideDown",
+            "hideMethod": "slideUp"
+          }
     }
 
     configureRouter(config: RouterConfiguration, router: Router) {
         config.title = 'Aurelia';
         config.map([{
-            route: [ '', 'home' ],
+            route: 'home',
             name: 'home',
             settings: { icon: 'home' },
             moduleId: PLATFORM.moduleName('../home/home'),
@@ -54,9 +76,30 @@ export class App {
             nav: true,
             title: 'Fetch data db'
         }, {
+            route: [ '', 'pool' ],
+            name: 'pool',
+            settings: { icon: 'globe' },
+            moduleId: PLATFORM.moduleName('../pool/pool'),
+            nav: true,
+            title: 'Pool'
+        }, {
+            route: 'pool-players',
+            name: 'poolplayers',
+            settings: { icon: 'tasks' },
+            moduleId: PLATFORM.moduleName('../pool/poolplayers'),
+            nav: true,
+            title: 'PoolPlayers'
+        }, {
+            route: 'schedule',
+            name: 'schedule',
+            settings: { icon: 'tasks' },
+            moduleId: PLATFORM.moduleName('../pool/schedule'),
+            nav: true,
+            title: 'Schedule'
+        }, {
             route: 'core',
             name: 'core',
-            settings: { icon: 'user' },
+            settings: { icon: 'cog' },
             moduleId: PLATFORM.moduleName('../home/core'),
             nav: true,
             title: 'Users'

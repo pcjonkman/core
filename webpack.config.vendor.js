@@ -33,7 +33,11 @@ module.exports = ({ prod } = {}) => {
                 'aurelia-templating-router',
                 'bootstrap',
                 'bootstrap/dist/css/bootstrap.css',
-                'jquery'
+                // 'flag-icon-css/css/flag-icon.css',
+                'jquery',
+                'moment',
+                'toastr',
+                'toastr/build/toastr.min.css'
             ],
         },
         output: {

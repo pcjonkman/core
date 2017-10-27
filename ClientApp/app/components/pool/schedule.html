@@ -1,0 +1,143 @@
+<template>
+    <div id="schedule">
+      <h1>Pooltjuh schedule
+        <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.firstLastName }
+        </span>
+      </h1>
+
+      <div>
+
+        <p if.bind="!pool"><em>Loading...</em></p>
+
+                  <!-- Nav tabs -->
+        <ul if.bind="pool" class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
+          <li role="presentation"><a href="#group" aria-controls="group" role="tab" data-toggle="tab">Group</a></li>
+          <li role="presentation"><a href="#country" aria-controls="country" role="tab" data-toggle="tab">Country</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="overview">
+
+            <div class="schedule" if.bind="pool.schedule">
+              <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title">Games</h3></div>
+                <table class="table">
+                  <tr>
+                    <th>Game</th>
+                    <th>Group</th>
+                    <th></th>
+                    <th>Date</th>
+                    <th>Home</th>
+                    <th>Away</th>
+                    <th>Score</th>
+                  </tr>
+                  <tr repeat.for="schedule of pool.schedule & signal:'data'">
+                      <td>${ schedule.matchId }</td>
+                      <td>${ schedule.group }</td>
+                      <td>${ formatDate(schedule.startDate, 'dd') }</td>
+                      <td>${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
+                      <td><img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" /> ${ schedule.country1 }</td>
+                      <td><img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" /> ${ schedule.country2 }</td>
+                      <td>${ score(schedule) }</td>
+                    </tr>
+                </table>
+              </div>
+            </div>
+
+          </div>
+          <div role="tabpanel" class="tab-pane" id="group">
+
+            <div class="schedule" repeat.for="group of groups & signal:'data'">
+              <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title">Group ${ group }</h3></div>
+                <table class="table group">
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th>P</th>
+                      <th>W</th>
+                      <th>D</th>
+                      <th>L</th>
+                      <th>P</th>
+                      <th>+</th>
+                      <th>-</th>
+                      <th></th>
+                    </tr>
+                    <tr repeat.for="schedule of schedulePoule(group) & signal:'data'">
+                      <td>${ $index + 1 }</td>
+                      <td><img if.bind="imageUrl(schedule.countryCode)" src.bind="imageUrl(schedule.countryCode)" /> ${ schedule.country }</td>
+                      <td>${ schedule.play }</td>
+                      <td>${ schedule.win }</td>
+                      <td>${ schedule.draw }</td>
+                      <td>${ schedule.lost }</td>
+                      <td>${ schedule.point }</td>
+                      <td>${ schedule.plus }</td>
+                      <td>${ schedule.min }</td>
+                      <td>${ goals(schedule) }</td>
+                    </tr>
+                  </table>
+                </div>
+
+                <div class="panel panel-default">
+                  <div class="panel-heading"><h3 class="panel-title">Games</h3></div>
+                  <table class="table schedule">
+                    <tr>
+                      <th>Game</th>
+                      <th>Group</th>
+                      <th></th>
+                      <th>Date</th>
+                      <th>Home</th>
+                      <th>Away</th>
+                      <th>Score</th>
+                    </tr>
+                    <tr repeat.for="schedule of scheduleGroup(group) & signal:'data'">
+                        <td>${ schedule.matchId }</td>
+                        <td>${ schedule.group }</td>
+                        <td>${ formatDate(schedule.startDate, 'dd') }</td>
+                        <td>${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
+                        <td><img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" /> ${ schedule.country1 }</td>
+                        <td><img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" /> ${ schedule.country2 }</td>
+                        <td>${ score(schedule) }</td>
+                      </tr>
+                  </table>
+                </div>
+            </div>
+
+          </div>
+          <div role="tabpanel" class="tab-pane" id="country">
+
+            <div class="schedule" repeat.for="country of countries & signal:'data'">
+              <div class="panel panel-primary">
+                  <div class="panel-heading"><img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" /> ${ country.name }</div>
+                  <table class="table schedule">
+                    <tr>
+                      <th>Game</th>
+                      <th>Group</th>
+                      <th></th>
+                      <th>Date</th>
+                      <th>Home</th>
+                      <th>Away</th>
+                      <th>Score</th>
+                    </tr>
+                    <tr repeat.for="schedule of scheduleCountry(country.id) & signal:'data'">
+                        <td>${ schedule.matchId }</td>
+                        <td>${ schedule.group }</td>
+                        <td>${ formatDate(schedule.startDate, 'dd') }</td>
+                        <td>${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
+                        <td><img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" /> ${ schedule.country1 }</td>
+                        <td><img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" /> ${ schedule.country2 }</td>
+                        <td>${ score(schedule) }</td>
+                      </tr>
+                  </table>
+                </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </template>
