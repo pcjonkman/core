@@ -39,9 +39,20 @@
                     <td class="hidden-tn hidden-xxs">${ schedule.group }</td>
                     <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'dd') }</td>
                     <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
-                    <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div><img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" /><span class="visible-tn-block"></span><span class="visible-xs-block"></span> ${ schedule.country1 }</td>
-                    <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div><img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" /><span class="visible-tn-block"></span><span class="visible-xs-block"></span> ${ schedule.country2 }</td>
-                    <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div><span class="visible-tn-block"></span><span class="visible-xs-block"></span>${ score(schedule) }</td>
+                    <td>
+                      <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div>
+                      <img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" />
+                      <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country1 }
+                    </td>
+                    <td>
+                      <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div>
+                      <img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" />
+                      <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country2 }
+                    </td>
+                    <td>
+                      <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div>
+                      <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>${ score(schedule) }
+                    </td>
                   </tr>
                 </table>
               </div>
@@ -98,9 +109,20 @@
                       <td class="hidden-tn hidden-xxs">${ schedule.group }</td>
                       <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'dd') }</td>
                       <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
-                      <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div><img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" /><span class="visible-tn-block"></span><span class="visible-xs-block"></span> ${ schedule.country1 }</td>
-                      <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div><img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" /><span class="visible-tn-block"></span><span class="visible-xs-block"></span> ${ schedule.country2 }</td>
-                      <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div><span class="visible-tn-block"></span><span class="visible-xs-block"></span>${ score(schedule) }</td>
+                      <td>
+                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div>
+                        <img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" />
+                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country1 }
+                      </td>
+                      <td>
+                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div>
+                        <img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" />
+                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country2 }
+                      </td>
+                      <td>
+                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div>
+                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>${ score(schedule) }
+                      </td>
                     </tr>
                   </table>
                 </div>
@@ -127,9 +149,20 @@
                       <td class="hidden-tn hidden-xxs">${ schedule.group }</td>
                       <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'dd') }</td>
                       <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
-                      <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div><img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" /><span class="visible-tn-block"></span><span class="visible-xs-block"></span> ${ schedule.country1 }</td>
-                      <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div><img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" /><span class="visible-tn-block"></span><span class="visible-xs-block"></span> ${ schedule.country2 }</td>
-                      <td><div class="hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div><span class="visible-tn-block"></span><span class="visible-xs-block"></span>${ score(schedule) }</td>
+                      <td>
+                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div>
+                        <img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" />
+                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country1 }
+                      </td>
+                      <td>
+                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div>
+                        <img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" />
+                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country2 }
+                      </td>
+                      <td>
+                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div>
+                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>${ score(schedule) }
+                      </td>
                     </tr>
                   </table>
                 </div>
