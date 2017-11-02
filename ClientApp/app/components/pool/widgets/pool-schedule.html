@@ -1,0 +1,42 @@
+<template>
+  <div class="schedule">
+    <div class="panel panel-primary" if.bind="items">
+      <div if.bind="!country" class="panel-heading"><h3 class="panel-title">Games</h3></div>
+      <div if.bind="country" class="panel-heading"><img if.bind="country && imageUrl(country.code)" src.bind="country && imageUrl(country.code)" /> ${ country.name }</div>
+      <table class="table schedule">
+        <tr>
+          <th class="hidden-tn hidden-xxs">Game</th>
+          <th class="hidden-tn hidden-xxs">Group</th>
+          <th class="hidden-tn hidden-xxs"></th>
+          <th class="hidden-tn hidden-xxs">Date</th>
+          <th>Home</th>
+          <th>Away</th>
+          <th>Score</th>
+        </tr>
+        <tr repeat.for="schedule of items" click.trigger="selectSchedule(schedule)">
+          <td class="hidden-tn hidden-xxs">${ schedule.matchId }</td>
+          <td class="hidden-tn hidden-xxs">${ schedule.group }</td>
+          <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'dd') }</td>
+          <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
+          <td>
+            <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div>
+            <img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" />
+            <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
+            <span>${ schedule.country1 }</span>
+          </td>
+          <td>
+            <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg">${ schedule.group }</div>
+            <img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" />
+            <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
+            <span>${ schedule.country2 }</span>
+          </td>
+          <td>
+            <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg">&nbsp;</div>
+            <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
+            <div class="no-border">${ score(schedule) }</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</template>

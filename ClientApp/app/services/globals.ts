@@ -2,7 +2,11 @@ import * as toastr from 'toastr';
 
 export var global = {
   toastr: function toast(msg) {
-    toastr.success(`<div style="margin-top: 5px;margin-bottom: 5px;">${msg}</div>`);
+    toastr.success(`${msg}`);
+  },
+  imageUrl: function(code: string) {
+    if (code === null || code === undefined) { return ''; }
+    return require(`../../../node_modules/flag-icon-css/flags/4x3/${ code.toLowerCase() }.svg`);
   }
 }
 

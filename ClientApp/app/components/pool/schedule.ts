@@ -9,10 +9,9 @@ import { global, IPoolSchedule, ISchedule, IPoule, IPoolCountry, ICountry } from
 export class Schedule {
   private _bindingSignaler: BindingSignaler;
   private _http: HttpClient;
-  private pool: IPoolSchedule;
-  private country: ICountry[];
-  private group: string = 'A';
-  
+  private _pool: IPoolSchedule;
+  private _countries: ICountry[];
+
   constructor(bindingSignaler: BindingSignaler, http: HttpClient) {
     this._bindingSignaler = bindingSignaler;
     this._http = http;
@@ -22,83 +21,58 @@ export class Schedule {
     this._http.fetch(`/api/Pool/Country`)
         .then(result => result.json() as Promise<IPoolCountry>)
         .then(data => {
-            this.country = data.country; //.filter((country: ICountry) => { return country.group === this.group; });
+            this._countries = data.country;
             window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
         });
     this._http.fetch('/api/Pool/Schedule')
         .then(result => result.json() as Promise<IPoolSchedule>)
         .then(data => {
-            this.pool = data;
+            this._pool = data;
             window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
         });    
   }
 
-  public selectSchedule(schedule: ISchedule) {
-    global.toastr(schedule.matchId);
-  }
-
-  public formatDate(value: string, format: string): string {
-    const date: moment.Moment = moment.utc(value);
-
-    if (date.isValid()) {
-      return date.local().format(format);
-    }
-
-    return value;
-  }
-
-  public score(schedule: ISchedule): string {
-    if (schedule.goals1 === -1 || schedule.goals2 === -1) {
-      return '';
-    }
-
-    return `${ schedule.goals1 } - ${ schedule.goals2 }`;
-  }
-
-  public goals(poule: IPoule): string {
+  public score(poule: IPoule): string {
     return `${ poule.plus - poule.min > 0 ? '+' : '' }${ poule.plus - poule.min }`;
   }
 
   public imageUrl(code: string) {
-    if (code === null || code === undefined) { return ''; }
-    return require(`../../../../node_modules/flag-icon-css/flags/4x3/${ code.toLowerCase() }.svg`);
+    return global.imageUrl(code);
   }
 
-  @computedFrom('pool', 'country')
+  @computedFrom('_pool', '_countries')
   public get groups(): string[] {
-    if (this.country === undefined) { return; }
-    const group = this.country.map((country: ICountry) => { return country.group; });
+    if (this._countries === undefined) { return; }
+    const group = this._countries.map((country: ICountry) => { return country.group; });
     return Array.from(new Set(group));
   }
 
-  @computedFrom('pool', 'country')
+  @computedFrom('_pool', '_country')
   public get countries(): ICountry[] {
-    return this.country;
+    return this._countries;
   }
 
-  // @computedFrom('pool')
-  // public get scheduleCountry(): ISchedule[] {
-  //   const countryId = 1;
+  @computedFrom('_pool', '_country')
+  public get pool(): IPoolSchedule {
+    return this._pool;
+  }
+
   public scheduleCountry(countryId: number): ISchedule[] {
-    const schedule: ISchedule[] = this.pool ? this.pool.schedule.filter((item: ISchedule) => { return item.country1Id === countryId || item.country2Id === countryId }) : [];
-    
+    const schedule: ISchedule[] = this._pool ? this._pool.schedule.filter((item: ISchedule) => { return item.country1Id === countryId || item.country2Id === countryId }) : [];
+
     return schedule;
   }
 
-  // @computedFrom('pool', 'country')
-  // public get scheduleGroup(): ISchedule[] {
   public scheduleGroup(group: string): ISchedule[] {
-    const schedule: ISchedule[] = this.pool ? this.pool.schedule.filter((item: ISchedule) => { return item.group === group; }) : [];
+    const schedule: ISchedule[] = this._pool ? this._pool.schedule.filter((item: ISchedule) => { return item.group === group; }) : [];
 
     return schedule;
   }
 
-  // @computedFrom('country', 'pool')
-  // public get schedulePoule(): IPoule[] {
   public schedulePoule(group: string): IPoule[] {
-    if (!this.pool && !this.country) { return; }
-    const schedule: ISchedule[] = this.pool ? this.pool.schedule.filter((item: ISchedule) => { return item.group === group; }) : [];
-    const poule: IPoule[] = this.country ? this.country.filter((country: ICountry) => { return country.group === group; }).map((item: ICountry) => {
+    if (!this._pool && !this._countries) { return; }
+    const schedule: ISchedule[] = this._pool ? this._pool.schedule.filter((item: ISchedule) => { return item.group === group; }) : [];
+    const poule: IPoule[] = this._countries ? this._countries.filter((country: ICountry) => { return country.group === group; }).map((item: ICountry) => {
       return {
         countryId: item.id,
         country: item.name,

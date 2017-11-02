@@ -1,4 +1,6 @@
 <template>
+  <require from="./widgets/pool-schedule"></require>
+
     <div id="schedule">
       <h1>Pooltjuh schedule
         <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
@@ -10,7 +12,7 @@
 
         <p if.bind="!pool"><em>Loading...</em></p>
 
-                  <!-- Nav tabs -->
+        <!-- Nav tabs -->
         <ul if.bind="pool" class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
           <li role="presentation"><a href="#group" aria-controls="group" role="tab" data-toggle="tab">Group</a></li>
@@ -21,42 +23,7 @@
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="overview">
 
-            <div class="schedule" if.bind="pool.schedule">
-              <div class="panel panel-primary">
-                <div class="panel-heading"><h3 class="panel-title">Games</h3></div>
-                <table class="table">
-                  <tr>
-                    <th class="hidden-tn hidden-xxs">Game</th>
-                    <th class="hidden-tn hidden-xxs">Group</th>
-                    <th class="hidden-tn hidden-xxs"></th>
-                    <th class="hidden-tn hidden-xxs">Date</th>
-                    <th>Home</th>
-                    <th>Away</th>
-                    <th>Score</th>
-                  </tr>
-                  <tr repeat.for="schedule of pool.schedule & signal:'data'">
-                    <td class="hidden-tn hidden-xxs">${ schedule.matchId }</td>
-                    <td class="hidden-tn hidden-xxs">${ schedule.group }</td>
-                    <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'dd') }</td>
-                    <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
-                    <td>
-                      <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div>
-                      <img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" />
-                      <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country1 }
-                    </td>
-                    <td>
-                      <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div>
-                      <img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" />
-                      <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country2 }
-                    </td>
-                    <td>
-                      <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div>
-                      <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>${ score(schedule) }
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
+            <pool-schedule items.bind="pool.schedule & signal:'data'"></pool-schedule>
 
           </div>
           <div role="tabpanel" class="tab-pane" id="group">
@@ -87,85 +54,22 @@
                       <td>${ schedule.point }</td>
                       <td>${ schedule.plus }</td>
                       <td>${ schedule.min }</td>
-                      <td class="hidden-tn">${ goals(schedule) }</td>
+                      <td class="hidden-tn">${ score(schedule) }</td>
                     </tr>
                   </table>
                 </div>
 
-                <div class="panel panel-default">
-                  <div class="panel-heading"><h3 class="panel-title">Games</h3></div>
-                  <table class="table schedule">
-                    <tr>
-                      <th class="hidden-tn hidden-xxs">Game</th>
-                      <th class="hidden-tn hidden-xxs">Group</th>
-                      <th class="hidden-tn hidden-xxs"></th>
-                      <th class="hidden-tn hidden-xxs">Date</th>
-                      <th>Home</th>
-                      <th>Away</th>
-                      <th>Score</th>
-                    </tr>
-                    <tr repeat.for="schedule of scheduleGroup(group) & signal:'data'">
-                      <td class="hidden-tn hidden-xxs">${ schedule.matchId }</td>
-                      <td class="hidden-tn hidden-xxs">${ schedule.group }</td>
-                      <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'dd') }</td>
-                      <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
-                      <td>
-                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div>
-                        <img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" />
-                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country1 }
-                      </td>
-                      <td>
-                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div>
-                        <img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" />
-                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country2 }
-                      </td>
-                      <td>
-                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div>
-                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>${ score(schedule) }
-                      </td>
-                    </tr>
-                  </table>
-                </div>
+                <pool-schedule items.bind="scheduleGroup(group) & signal:'data'"></pool-schedule>
+
             </div>
 
           </div>
           <div role="tabpanel" class="tab-pane" id="country">
 
             <div class="schedule" repeat.for="country of countries & signal:'data'">
-              <div class="panel panel-primary">
-                  <div class="panel-heading"><img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" /> ${ country.name }</div>
-                  <table class="table schedule">
-                    <tr>
-                      <th class="hidden-tn hidden-xxs">Game</th>
-                      <th class="hidden-tn hidden-xxs">Group</th>
-                      <th class="hidden-tn hidden-xxs"></th>
-                      <th class="hidden-tn hidden-xxs">Date</th>
-                      <th>Home</th>
-                      <th>Away</th>
-                      <th>Score</th>
-                    </tr>
-                    <tr repeat.for="schedule of scheduleCountry(country.id) & signal:'data'">
-                      <td class="hidden-tn hidden-xxs">${ schedule.matchId }</td>
-                      <td class="hidden-tn hidden-xxs">${ schedule.group }</td>
-                      <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'dd') }</td>
-                      <td class="hidden-tn hidden-xxs">${ formatDate(schedule.startDate, 'DD-MM-YYYY HH:mm') }</td>
-                      <td>
-                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ formatDate(schedule.startDate, 'D MMMM HH:mm') }</div>
-                        <img if.bind="imageUrl(schedule.country1Code)" src.bind="imageUrl(schedule.country1Code)" />
-                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country1 }
-                      </td>
-                      <td>
-                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="border-bottom: solid 1px #ccc; margin-bottom: 5px; font-weight: bold;">${ schedule.group }</div>
-                        <img if.bind="imageUrl(schedule.country2Code)" src.bind="imageUrl(schedule.country2Code)" />
-                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span> ${ schedule.country2 }
-                      </td>
-                      <td>
-                        <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg" style="margin-bottom: 5px; font-weight: bold;">&nbsp;</div>
-                        <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>${ score(schedule) }
-                      </td>
-                    </tr>
-                  </table>
-                </div>
+
+              <pool-schedule country.bind="country & signal:'data'" items.bind="scheduleCountry(country.id) & signal:'data'"></pool-schedule>
+
             </div>
 
           </div>

@@ -14,7 +14,6 @@ export class PoolPlayers {
   }
 
   public activate() {
-
     this._http.fetch('/api/Pool/PoolPlayers')
     .then(result => result.json() as Promise<IPoolPoolPlayer>)
     .then(data => {
