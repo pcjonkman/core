@@ -11,7 +11,7 @@
           <th class="hidden-tn hidden-xxs">Date</th>
           <th>Home</th>
           <th>Away</th>
-          <th>Score</th>
+          <th>Result</th>
         </tr>
         <tr repeat.for="schedule of items" click.trigger="selectSchedule(schedule)">
           <td class="hidden-tn hidden-xxs">${ schedule.matchId }</td>
@@ -33,7 +33,7 @@
           <td>
             <div class="visible-tn visible-xxs hidden-xs hidden-sm hidden-md hidden-lg">&nbsp;</div>
             <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
-            <div class="no-border">${ score(schedule) }</div>
+            <div class="no-border">${ result(schedule) }</div>
           </td>
         </tr>
       </table>

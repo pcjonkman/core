@@ -23,13 +23,21 @@ export class Schedule {
         .then(data => {
             this._countries = data.country;
             window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
+        })
+        .catch((errorMessage: string) => {
+          this._countries = undefined;
+          global.toastr(errorMessage, true);
         });
     this._http.fetch('/api/Pool/Schedule')
         .then(result => result.json() as Promise<IPoolSchedule>)
         .then(data => {
             this._pool = data;
             window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
-        });    
+        })
+        .catch((errorMessage: string) => {
+          this._pool = { user: null, schedule: undefined };
+          global.toastr(errorMessage, true);
+        });
   }
 
   public score(poule: IPoule): string {

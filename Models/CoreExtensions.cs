@@ -58,7 +58,7 @@ namespace Core.Models
                 }
                 if (!context.Finals.Any()) {
                     context.Finals.Add(new Finals { Id = 1, LevelName = "Achtste finales", LevelNumber = 1 });
-                    context.Finals.Add(new Finals { Id = 2, LevelName = "Kwartfinales", LevelNumber = 2 });
+                    context.Finals.Add(new Finals { Id = 2, LevelName = "Kwart finales", LevelNumber = 2 });
                     context.Finals.Add(new Finals { Id = 3, LevelName = "Halve finales", LevelNumber = 3 });
                     context.Finals.Add(new Finals { Id = 4, LevelName = "Finale", LevelNumber = 4 });
                     context.Finals.Add(new Finals { Id = 5, LevelName = "Winnaar", LevelNumber = 5 });

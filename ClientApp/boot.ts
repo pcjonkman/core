@@ -5,7 +5,11 @@ import 'bootstrap';
 declare const IS_DEV_BUILD: boolean; // The value is supplied by Webpack during the build
 
 export function configure(aurelia: Aurelia) {
-    aurelia.use.standardConfiguration();
+    aurelia.use
+            .standardConfiguration()
+            .globalResources(PLATFORM.moduleName('app/services/valueConverters'))
+            .feature(PLATFORM.moduleName('app/features/index'))
+            .plugin(PLATFORM.moduleName('aurelia-validation'));
 
     if (IS_DEV_BUILD) {
         aurelia.use.developmentLogging();

@@ -1,18 +1,37 @@
 import { HttpClient, json } from 'aurelia-fetch-client';
 import { autoinject } from 'aurelia-framework';
+import { Validator, ValidationController, ValidationControllerFactory, ValidationRules } from 'aurelia-validation';
 import { App } from '../app/app';
 import { global, MessageStatus, IPool, IPoolRanking, IRank, IMessage } from '../../services/globals'
 import * as moment from 'moment';
+import { Router } from 'aurelia-router';
+import { BootstrapFormRenderer } from '../../services/bootstrapFormRenderer';
 
 @autoinject()
 export class Pool {
   private _http: HttpClient;
+  private _router: Router;
   public pool: IPool;
   public message: IMessage;
   public ranking: IRank[];
+  public changeName: boolean = false;
+  public controller: ValidationController;
+  public nameRules: ValidationRules;
+  
+  constructor(http: HttpClient, router: Router, private validator: Validator, controllerFactory: ValidationControllerFactory) {
+    this._http = http;
+    this._router = router;
+    this.controller = controllerFactory.createForCurrentScope(validator);
+    this.controller.addRenderer(new BootstrapFormRenderer());
+    this.setupValidation();
+  }
 
-  constructor(http: HttpClient) {
-      this._http = http;
+  private setupValidation() {
+    this.nameRules = ValidationRules
+    .ensure('name')
+      .required()
+      .minLength(3)
+    .rules;
   }
 
   public activate() {
@@ -20,14 +39,28 @@ export class Pool {
         .then(result => result.json() as Promise<IPool>)
         .then(data => {
             this.pool = data;
+        })
+        .catch((errorMessage: string) => {
+          this.pool = { user: null, poolPlayer: null, messages: undefined };
+          global.toastr(errorMessage, true);
         });
 
     this._http.fetch('/api/Pool/Ranking')
         .then(result => result.json() as Promise<IPoolRanking>)
         .then(data => {
             this.ranking = data.ranking;
+        })
+        .catch((errorMessage: string) => {
+          this.ranking = undefined;
+          global.toastr(errorMessage, true);
         });
 
+  }
+
+  public cancelBubbling(event: Event): boolean {
+    event.stopPropagation();
+
+    return true;
   }
 
   public selectMessage() {
@@ -36,6 +69,32 @@ export class Pool {
 
   public edit(id: string) {
     location.href = `/Users/Edit/${id}`;
+  }
+
+  public editName() {
+    this.changeName = !this.changeName;
+  }
+
+  public postName() {
+    this.changeName = !this.changeName;
+
+    this.controller.validate()
+    .then(result => {
+      if (result.valid) {
+        this._http.fetch('/api/pool/PoolPlayer', {
+          method: 'post',
+          body: json(this.pool.poolPlayer)
+        })
+        .then(result => result.json() as Promise<IPool>)
+        .then(data => {
+          this.pool = data;
+          this.message = null;
+          global.toastr('Name updated');
+        });
+      } else {
+        global.toastr('Name is not valid', true);
+      }
+    });
   }
 
   public post() {
@@ -92,5 +151,10 @@ export class Pool {
     }
 
     return value;
+  }
+
+  public select(id: number) {
+    // global.toastr(poolPlayer.name);
+    this._router.navigate(`predictions/${id}`)
   }
 }

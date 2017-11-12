@@ -97,6 +97,13 @@ export class App {
             nav: true,
             title: 'Schedule'
         }, {
+            route: ['predictions', 'predictions/:id'],
+            name: 'predictions',
+            settings: { icon: 'tasks' },
+            moduleId: PLATFORM.moduleName('../pool/predictions'),
+            nav: true,
+            title: 'Predictions'
+        }, {
             route: 'core',
             name: 'core',
             settings: { icon: 'cog' },

@@ -17,7 +17,7 @@ export class PoolSchedule {
     return value;
   }
 
-  public score(schedule: ISchedule): string {
+  public result(schedule: ISchedule): string {
     if (schedule.goals1 === -1 || schedule.goals2 === -1) {
       return '';
     }

@@ -4,6 +4,14 @@
     cursor: pointer;
     border-bottom: solid 1px #ccc;
     padding-bottom: 3px;
+
+    &.no-border {
+      border: 0;
+    }
+
+    & .bold {
+      font-weight: bold;
+    }
   }
 
   & .new-message {
@@ -22,5 +30,17 @@
     & .red {
       color: #c9302c;
     }
+  }
+
+  & .ranking .poolplayer {
+    cursor: pointer;
+  }
+
+  & .show-inline {
+    display: inline-block;
+  }
+
+  & .hide {
+    display: none;
   }
 }

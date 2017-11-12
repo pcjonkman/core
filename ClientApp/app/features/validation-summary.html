@@ -1,0 +1,19 @@
+<template bindable="controller,errors,autofocus">
+  <style>
+    .validation-summary {
+      padding: 10px;
+    }
+  </style>
+ 
+  <ul class="validation-summary list-group" show.bind="errors.length">
+    <li class="list-group-item list-group-item-danger" repeat.for="error of errors">
+      <a class="list-group-item-danger" href="#" click.delegate="controller.elements.get(error)[0].focus()"
+         if.bind="controller!=null && autofocus">
+        <template replaceable part="error">${error.message}</template>
+      </a>
+      <span class="list-group-item-danger" if.bind="!(controller!=null && autofocus)">
+        <template replaceable part="error">${error.message}</template>
+      </span>
+    </li>
+  </ul>
+</template>

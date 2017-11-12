@@ -2,28 +2,40 @@
   <require from="../../services/messageStatusViewEngineHooks"></require>
   <div id="pool">
     <h1>Pooltjuh
-      <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.firstLastName }
+      <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">[
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.lastName } ]
       </span>
     </h1>
     
     <p if.bind="!pool"><em>Loading...</em></p>
 
-    <div class="ranking" if.bind="ranking && ranking.length !== 0">
-      <div class="panel panel-primary">
+    <div class="user no-border" click.delegate="editName()" if.bind="pool.user.isLoggedIn">
+      <form class="form-inline">
+        [ Poolplayer: <span class="bold">${ pool.poolPlayer.name }</span>
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> ]
+        <span class="${changeName ? 'show-inline' : 'hide'}" click.trigger="cancelBubbling($event)">
+          <span class="form-group">
+            <input type="text" class="form-control" placeholder="Pool name" value.bind="pool.poolPlayer.name & validateOnChange:controller:nameRules" />
+          </span>
+          <button type="submit" class="btn btn-default" click.trigger="postName()">Update name</button>
+        </span>
+      </form>
+    </div>
+    <validation-summary
+      errors.bind="controller.errors"
+      controller.bind="controller"
+      autofocus.bind="true">
+    </validation-summary>
+
+    <div class="ranking" if.bind="pool && ranking && ranking.length !== 0">
+      <div class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Ranking</h3></div>
-        <table class="table">
-          <tr>
-            <th>Number</th>
-            <th>Name</th>
-            <th>Score</th>
-          </tr>
-          <tr repeat.for="rank of ranking">
-              <td>${ rank.rank }</td>
-              <td>${ rank.name }</td>
-              <td>${ rank.score }</td>
-          </tr>
-        </table>
+          <ul class="list-group">
+            <li class="list-group-item poolplayer ${ pool.poolPlayer.id === rank.id ? 'active' : '' }" click.trigger="select(rank.id)" repeat.for="rank of ranking">
+              <span class="badge">${ rank.score }</span>
+              ${ $index + 1 }. ${ rank.name }
+            </li>
+          </ul>
       </div>
     </div>
 

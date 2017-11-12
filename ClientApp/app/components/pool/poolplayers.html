@@ -2,15 +2,19 @@
   <div id="poolplayers">
     <h1>Pooltjuh poolplayers
       <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.firstLastName }
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.lastName }
       </span>
     </h1>
     
     <p if.bind="!pool"><em>Loading...</em></p>
 
-    <div class="poolplayers" if.bind="pool.poolplayers" repeat.for="poolplayer of pool.poolplayers">
-      <div class="poolplayer" click.trigger="selectPoolPlayer(poolplayer)">
-          ${ $index + 1 }) ${ poolplayer.name }
+    <div class="panel panel-default" if.bind="pool.poolPlayer">
+      <div class="panel-heading"><h3 class="panel-title">Poolplayers</h3></div>
+        <ul class="validation-summary list-group poolplayers">
+          <li class="list-group-item poolplayer ${ pool.poolPlayer.id === poolplayer.id ? 'active' : '' }" click.trigger="selectPoolPlayer(poolplayer)" repeat.for="poolplayer of pool.poolPlayers">
+              ${ $index + 1 }. ${ poolplayer.name }
+          </li>
+        </ul>
       </div>
     </div>
   </div>
