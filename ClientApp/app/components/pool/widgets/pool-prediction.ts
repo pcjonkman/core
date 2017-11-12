@@ -100,7 +100,7 @@ export class PoolPrediction {
   }
 
   public post() {
-    this.controller.validate()
+    this.controller.validate({ object: this.pool, propertyName: 'match', rules: this.predictionRules })
       .then(result => {
         if (result.valid) {
           this._http.fetch('/api/pool/prediction', {
