@@ -48,9 +48,10 @@
               <option repeat.for="country of selectedCountries" model.bind="country">${country.name}</option>
             </select>
             <div if.bind="show" repeat.for="country of selectedCountries" class="text-left">
+              <span class="visible-tn visible-xxs">${ country.name }</span><span class="visible-xs">${ country.name }</span>
               <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />
               <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
-              <span>${ country.name }</span>
+              <span class="hidden-tn hidden-xxs hidden-xs">${ country.name }</span>
             </div>
           </div>
         </div>
