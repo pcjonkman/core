@@ -100,9 +100,17 @@
     display: flex;
     align-items: center;     /* Align the flex-items vertically */
     justify-content: center; /* Optional, to align inner flex-items horizontally within the column  */
+
+    &.vertical-top {
+      align-items: normal;     /* Align the flex-items vertically */
+    }
   }
 
   .padding {
     padding: 10px;
+  }
+
+  .margin {
+    margin: 10px;
   }
 }

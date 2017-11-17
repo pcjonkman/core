@@ -12,33 +12,46 @@
             <div class="padding-bottom text-center">Countries</div>
           </div>
           <div class="col-xs-12 text-center">
-            <select multiple class="form-control" if.bind="countries" value.bind="addCountries" disabled.bind="disable">
+            <select multiple class="form-control" if.bind="countries && !show" value.bind="addCountries" disabled.bind="disable">
               <option repeat.for="country of countries" model.bind="country">${country.name}</option>
             </select>
+            <div if.bind="show" repeat.for="country of countries" class="text-right">
+              <span>${ country.name }</span>
+              <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
+              <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />
+            </div>
           </div>
         </div>
       </div>
       <div class="col-xs-2 text-center">
         <div class="row">
           <div class="col-xs-12 text-center">
-            <button type="button" class="btn btn-default" click.trigger="deselect(countries, selectedCountries)" disabled.bind="selectedCountries.length === 0 || disable">
+            <button type="button" class="btn btn-default margin" click.trigger="toggleShow()" disabled.bind="disable">
+              <span class="glyphicon glyphicon-modal-window"></span><span class="hidden-tn hidden-xxs hidden-xs"> Show</span>
+            </button>
+            <button type="button" class="btn btn-default" click.trigger="deselect(countries, selectedCountries)" disabled.bind="selectedCountries.length === 0 || disable || show">
               <span class="glyphicon glyphicon-chevron-left"></span>
             </button>
-            <button type="button" class="btn btn-default" click.trigger="select(countries, selectedCountries, max)" disabled.bind="selectedCountries.length === max || disable">
+            <button type="button" class="btn btn-default" click.trigger="select(countries, selectedCountries, max)" disabled.bind="selectedCountries.length === max || disable || show">
               <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
           </div>
         </div>
       </div>
-      <div class="col-xs-5 text-center">
+      <div class="col-xs-5 text-center ${show ? 'vertical-top' : ''}">
         <div class="row">
           <div class="col-xs-12 text-center">
             <div class="padding-bottom">${ toSelect(selectedCountries, max) & signal:'selected' }</div>
           </div>
           <div class="col-xs-12 text-center">
-            <select multiple class="form-control" if.bind="selectedCountries" value.bind="removeCountries" disabled.bind="disable">
+            <select multiple class="form-control" if.bind="selectedCountries && !show" value.bind="removeCountries" disabled.bind="disable">
               <option repeat.for="country of selectedCountries" model.bind="country">${country.name}</option>
             </select>
+            <div if.bind="show" repeat.for="country of selectedCountries" class="text-left">
+              <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />
+              <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
+              <span>${ country.name }</span>
+            </div>
           </div>
         </div>
       </div>

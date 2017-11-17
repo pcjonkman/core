@@ -18,6 +18,8 @@ export class PoolCountrySelector {
   private _bindingSignaler: BindingSignaler;
   private _subscriptions: Subscription[] = [];
 
+  private _show: boolean = false;
+  
   constructor(bindingEngine: BindingEngine, bindingSignaler: BindingSignaler) {
     this._bindingEngine = bindingEngine;
     this._bindingSignaler = bindingSignaler;
@@ -60,5 +62,18 @@ export class PoolCountrySelector {
 
   public toSelect(countries: ICountry[], max: number) {
     return `${ this.max - countries.length } to select`;
+  }
+
+  public imageUrl(code: string) {
+    return global.imageUrl(code);
+  }
+
+  public toggleShow() {
+    this._show = !this._show;
+  }
+
+  @computedFrom('_show')
+  public get show() {
+    return this._show;
   }
 }
