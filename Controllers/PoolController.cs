@@ -104,10 +104,6 @@ namespace Core.Controllers
           var mp = query.poolMatchPrediction(id).ToList();
           var fp = query.poolFinalsPrediction(id).ToList();
 
-          // if (mp.Count() > 0 && mp[0].PredictedGoals1 == -1 && mp[0].PredictedGoals2 == -1 && mp[0].Subscore == -1) {
-          //   return Json(new { user = user, match = new List<dynamic>(), finals = new List<dynamic>() });
-          // }
-
           return Json(new { user = user, match = mp, finals = fp });
         }
 
@@ -137,6 +133,9 @@ namespace Core.Controllers
                 return Json(pool);
             }
 
+            List<dynamic> mpList = new List<dynamic>();
+            List<dynamic> fpList = new List<dynamic>();
+            
             if (ModelState.IsValid)
             {
               var selectedDbUser = _context.Users.SingleOrDefault(u => u.OwnerId == pool.user.user.Id);
@@ -159,11 +158,40 @@ namespace Core.Controllers
                   matchPrediction.GoalsCountry1 = match.PredictedGoals1;
                   matchPrediction.GoalsCountry2 = match.PredictedGoals2;
                 }
+
+                var finalLevels = (from p in _context.Finals
+                                    select p.LevelNumber);
+                foreach(var finalLevel in finalLevels) {
+                  List<FinalsPrediction> finalPrediction = new List<FinalsPrediction>();
+                  int finalId = _context.Finals.Where(fn => fn.LevelNumber == finalLevel).First().Id;
+                  var curr = from fp in _context.FinalsPrediction
+                              where fp.FinalsId == finalId && fp.PoolPlayerId == poolPlayer.Id
+                              select fp;
+                  foreach (var finals in pool.finals.Where(f => f.Level == finalLevel)) {
+                    FinalsPrediction f = new FinalsPrediction() { FinalsId = finalId, PoolPlayerId = poolPlayer.Id };
+                    f.CountryId = finals.CountryId;
+                    finalPrediction.Add(f);
+                    if (curr.Where(c => c.CountryId == f.CountryId).Count() == 0)
+                    {
+                      _context.FinalsPrediction.Add(f);
+                    }
+                  }
+                  var removequery = from c in curr
+                                      // where (finalPrediction.Where(fp => fp.CountryId == c.CountryId).SingleOrDefault() != null)
+                                      where !(finalPrediction.Any(fpCurr => fpCurr.CountryId == c.CountryId))
+                                      select c;
+                  _context.FinalsPrediction.RemoveRange(removequery);
+
+                }
                 _context.SaveChanges();
+
+                mpList = query.poolMatchPrediction(poolPlayer.Id).ToList();
+                fpList = query.poolFinalsPrediction(poolPlayer.Id).ToList();
+
               }
             }
 
-            return Json(pool);
+            return Json(new { user = pool.user, match = mpList, finals = fpList });
         }
 
         [HttpPost("PoolPlayer")]
@@ -234,7 +262,15 @@ namespace Core.Controllers
         public class PoolPredictions {
           public PoolUser user { get; set; }
           public List<PoolMatchPredicion> match { get; set; }
-          public List<object> finals { get; set; }
+          public List<PoolFinalsPrediction> finals { get; set; }
+        }
+
+        public class PoolFinalsPrediction {
+          public string Country { get; set; }
+          public string CountryCode { get; set; }
+          public int CountryId { get; set; }
+          public int Level { get; set; }
+          public int SubScore { get; set; }
         }
 
         public class PoolMatchPredicion {

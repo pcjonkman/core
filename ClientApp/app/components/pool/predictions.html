@@ -1,20 +1,20 @@
 <template>
     <require from="./widgets/pool-prediction"></require>
-  
-      <div id="predictions">
-        <h1>Pooltjuh predictions
-          <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.lastName }
-          </span>
-        </h1>
-  
-        <div>
-  
-          <p if.bind="!pool"><em>Loading...</em></p>
 
-          <pool-prediction pool.bind="pool & signal:'data'"></pool-prediction>
+    <div id="predictions">
+      <h1>Pooltjuh predictions
+        <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.lastName }
+        </span>
+      </h1>
 
-        </div>
+      <div>
+
+        <p if.bind="!pool"><em>Loading...</em></p>
+
+        <pool-prediction countries.bind="countries & signal:'data'" pool.bind="pool & signal:'data'"></pool-prediction>
 
       </div>
-    </template>
+
+    </div>
+  </template>

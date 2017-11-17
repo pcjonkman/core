@@ -75,7 +75,11 @@ export interface IPoolPrediction {
 }
 
 export interface IFinalsPrediction {
+  country: string;
+  countryCode: string;
   countryId: number;
+  level: number;
+  subScore: number;
 }
 
 export interface IMatchPrediction {
