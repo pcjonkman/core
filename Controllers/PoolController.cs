@@ -117,9 +117,9 @@ namespace Core.Controllers
           var mp = query.poolMatchPrediction(id.Value).ToList();
           var fp = query.poolFinalsPrediction(id.Value).ToList();
 
-          if (mp.Count() > 0 && mp[0].PredictedGoals1 == -1 && mp[0].PredictedGoals2 == -1 && mp[0].Subscore == -1) {
-            return Json(new { user = user, match = new List<dynamic>(), finals = new List<dynamic>() });
-          }
+          // if (mp.Count() > 0 && mp[0].PredictedGoals1 == -1 && mp[0].PredictedGoals2 == -1 && mp[0].SubScore == -1) {
+          //   mp = new List<dynamic>();
+          // }
 
           return Json(new { user = user, match = mp, finals = fp });
         }
