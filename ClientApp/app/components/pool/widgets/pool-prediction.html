@@ -58,11 +58,11 @@
         </tr>
       </table>
 
-      <pool-country-selector title.bind="'Round of 16'" max.bind="16" countries.bind="countries16 & signal:'data'" selected-countries.bind="selectedCountries16 & signal:'data'"></pool-country-selector>
-      <pool-country-selector title.bind="'Quarter-finals'" max.bind="8" countries.bind="countries8 & signal:'data'" selected-countries.bind="selectedCountries8 & signal:'data'"></pool-country-selector>
-      <pool-country-selector title.bind="'Semi-finals'" max.bind="4" countries.bind="countries4 & signal:'data'" selected-countries.bind="selectedCountries4 & signal:'data'"></pool-country-selector>
-      <pool-country-selector title.bind="'Finals'" max.bind="2" countries.bind="countries2 & signal:'data'" selected-countries.bind="selectedCountries2 & signal:'data'"></pool-country-selector>
-      <pool-country-selector title.bind="'Champion'" max.bind="1" countries.bind="countries1 & signal:'data'" selected-countries.bind="selectedCountries1 & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="!pool.user.isLoggedIn || controller.errors.length !== 0" title.bind="'Round of 16'" max.bind="16" countries.bind="countries16 & signal:'data'" selected-countries.bind="selectedCountries16 & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="!pool.user.isLoggedIn || controller.errors.length !== 0" title.bind="'Quarter-finals'" max.bind="8" countries.bind="countries8 & signal:'data'" selected-countries.bind="selectedCountries8 & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="!pool.user.isLoggedIn || controller.errors.length !== 0" title.bind="'Semi-finals'" max.bind="4" countries.bind="countries4 & signal:'data'" selected-countries.bind="selectedCountries4 & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="!pool.user.isLoggedIn || controller.errors.length !== 0" title.bind="'Finals'" max.bind="2" countries.bind="countries2 & signal:'data'" selected-countries.bind="selectedCountries2 & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="!pool.user.isLoggedIn || controller.errors.length !== 0" title.bind="'Champion'" max.bind="1" countries.bind="countries1 & signal:'data'" selected-countries.bind="selectedCountries1 & signal:'data'"></pool-country-selector>
 
       <div class="buttons text-right">
         <button type="button" class="btn btn-primary" click.delegate="post()" disabled.bind="!pool.user.isLoggedIn || controller.errors.length !== 0">Save</button>

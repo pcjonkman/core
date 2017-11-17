@@ -9,7 +9,8 @@ export class PoolCountrySelector {
   @bindable public countries: ICountry[];
   @bindable public selectedCountries: ICountry[];
   @bindable public max: number;
-
+  @bindable public disable: boolean = false;
+  
   public addCountries: ICountry[] = [];
   public removeCountries: ICountry[] = [];
   
