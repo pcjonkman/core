@@ -60,6 +60,28 @@ export class PoolCountrySelector {
     window.setTimeout(() => { this._bindingSignaler.signal('selected'); }, 0);
   }
 
+  public addSelect(country: ICountry) {
+    if (this.isSelected(country, this.addCountries)) {
+      this.addCountries.splice(this.addCountries.indexOf(country), 1);
+    } else {
+      this.addCountries.push(country);
+    }
+    window.setTimeout(() => { this._bindingSignaler.signal('selected'); }, 0);
+  }
+
+  public removeSelect(country: ICountry) {
+    if (this.isSelected(country, this.removeCountries)) {
+      this.removeCountries.splice(this.removeCountries.indexOf(country), 1);
+    } else {
+      this.removeCountries.push(country);
+    }
+    window.setTimeout(() => { this._bindingSignaler.signal('selected'); }, 0);
+  }
+
+  public isSelected(country: ICountry, countries: ICountry[]) {
+    return countries.indexOf(country) > -1;
+  }
+
   public toSelect(countries: ICountry[], max: number) {
     return `${ this.max - countries.length } to select`;
   }

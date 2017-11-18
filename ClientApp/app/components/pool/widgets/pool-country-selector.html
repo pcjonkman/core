@@ -6,15 +6,22 @@
       </div>
     </div>
     <div class="pool-country-selector row vertical-align padding">
-      <div class="col-xs-5 text-center">
+      <div class="col-xs-5 text-center ${show ? 'vertical-top' : ''}">
         <div class="row">
           <div class="col-xs-12 text-center">
             <div class="padding-bottom text-center">Countries</div>
           </div>
           <div class="col-xs-12 text-center">
-            <select multiple class="form-control" if.bind="countries && !show" value.bind="addCountries" disabled.bind="disable">
+            <div class="select scrollable text-left">
+              <div repeat.for="country of countries" click.trigger="addSelect(country)" class="${$parent.isSelected(country, addCountries) ? 'selected' : '' & signal:'selected'}">
+                <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />
+                <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
+                <span>${ country.name }</span>
+              </div>
+            </div>
+            <!-- <select multiple class="form-control" if.bind="countries && !show" value.bind="addCountries" disabled.bind="disable">
               <option repeat.for="country of countries" model.bind="country">${country.name}</option>
-            </select>
+            </select> -->
             <div if.bind="show" repeat.for="country of countries" class="text-right">
               <span>${ country.name }</span>
               <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
@@ -23,12 +30,12 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-2 text-center">
+      <div class="col-xs-2 text-center ${show ? 'vertical-top' : ''}">
         <div class="row">
           <div class="col-xs-12 text-center">
-            <button type="button" class="btn btn-default margin" click.trigger="toggleShow()" disabled.bind="disable">
+            <!-- <button type="button" class="btn btn-default margin" click.trigger="toggleShow()" disabled.bind="disable">
               <span class="glyphicon glyphicon-modal-window"></span><span class="hidden-tn hidden-xxs hidden-xs"> Show</span>
-            </button>
+            </button> -->
             <button type="button" class="btn btn-default" click.trigger="deselect(countries, selectedCountries)" disabled.bind="selectedCountries.length === 0 || disable || show">
               <span class="glyphicon glyphicon-chevron-left"></span>
             </button>
@@ -44,9 +51,16 @@
             <div class="padding-bottom">${ toSelect(selectedCountries, max) & signal:'selected' }</div>
           </div>
           <div class="col-xs-12 text-center">
-            <select multiple class="form-control" if.bind="selectedCountries && !show" value.bind="removeCountries" disabled.bind="disable">
+            <div class="select scrollable text-left">
+              <div repeat.for="country of selectedCountries" click.trigger="removeSelect(country)" class="${$parent.isSelected(country, removeCountries) ? 'selected' : '' & signal:'selected'}">
+                <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />
+                <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
+                <span>${ country.name }</span>
+              </div>
+            </div>
+            <!-- <select multiple class="form-control" if.bind="selectedCountries && !show" value.bind="removeCountries" disabled.bind="disable">
               <option repeat.for="country of selectedCountries" model.bind="country">${country.name}</option>
-            </select>
+            </select> -->
             <div if.bind="show" repeat.for="country of selectedCountries" class="text-left">
               <span class="visible-tn visible-xxs">${ country.name }</span><span class="hidden-tn hidden-xxs visible-xs">${ country.name }</span>
               <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />

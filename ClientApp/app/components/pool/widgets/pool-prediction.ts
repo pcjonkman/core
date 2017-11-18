@@ -56,6 +56,11 @@ export class PoolPrediction {
       this.selectedCountries4 = [];
       this.selectedCountries2 = [];
       this.selectedCountries1 = [];
+      this.countries1 = this.countries.slice(0);
+      this.countries2 = this.countries.slice(0);
+      this.countries4 = this.countries.slice(0);
+      this.countries8 = this.countries.slice(0);
+      this.countries16 = this.countries.slice(0);
       this.pool.finals.forEach((fp: IFinalsPrediction) => {
         switch(fp.level) {
           case 1:

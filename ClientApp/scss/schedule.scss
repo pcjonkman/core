@@ -71,14 +71,41 @@
       }
     }
 
-    & select {
+    & select,
+    & .select {
       height: 280px;
       width: 180px;
       display: inline-block;
     }
+    & .select {
+      overflow: visible;
+      overflow-x: hidden;
+      overflow-y: visible;
+      border: solid 1px #ccc;
+      border-radius: 4px;
+
+      & div {
+        padding-top: 1px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 1px;
+        white-space: nowrap;
+        cursor: pointer;
+        border-bottom: solid 1px #eee;
+
+        &:last-of-type {
+          border-bottom: 0;
+        }
+
+        &.selected {
+          background-color: #ccc;
+        }
+      }
+    }
     @media (max-width: 767px) {
-      & select {
-        width: inherit;
+      & select,
+      & .select {
+          width: inherit;
       }
     }
     & .padding-bottom {
