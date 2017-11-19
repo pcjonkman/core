@@ -71,12 +71,18 @@
       }
     }
 
+    & .closing {
+      font-size: 12px;
+      padding-top: 3px;
+    }
+
     & select,
     & .select {
       height: 280px;
       width: 180px;
       display: inline-block;
     }
+
     & .select {
       overflow: visible;
       overflow-x: hidden;

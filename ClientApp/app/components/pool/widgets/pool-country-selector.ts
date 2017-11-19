@@ -61,6 +61,7 @@ export class PoolCountrySelector {
   }
 
   public addSelect(country: ICountry) {
+    if (this.disable) { return; }
     if (this.isSelected(country, this.addCountries)) {
       this.addCountries.splice(this.addCountries.indexOf(country), 1);
     } else {
@@ -70,6 +71,7 @@ export class PoolCountrySelector {
   }
 
   public removeSelect(country: ICountry) {
+    if (this.disable) { return; }
     if (this.isSelected(country, this.removeCountries)) {
       this.removeCountries.splice(this.removeCountries.indexOf(country), 1);
     } else {

@@ -4,6 +4,7 @@ import { Validator, ValidationController, ValidationControllerFactory, Validatio
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as moment from 'moment';
+import { MomentInput } from 'moment';
 import { global, IPoolPrediction, IMatchPrediction, IFinalsPrediction, ICountry } from '../../../services/globals';
 import { BootstrapFormRenderer } from '../../../services/bootstrapFormRenderer';
 
@@ -24,6 +25,8 @@ export class PoolPrediction {
   public selectedCountries16: ICountry[] = [];
   
   public predictionRules: ValidationRules;
+
+  private _closingDate: string = "2017-12-19T10:39:00"
 
   private _bindingEngine: BindingEngine;
   private _bindingSignaler: BindingSignaler;
@@ -130,6 +133,23 @@ export class PoolPrediction {
     //   item.group ==='E' || 
     //   item.group ==='F';
     // })
+  }
+
+  @computedFrom('pool', 'controller', 'isClosed')
+  public get isDisabled(): boolean {
+    return (!this.pool.user.isLoggedIn || this.controller.errors.length !== 0 || this.isClosed) ? true : false;
+  }
+
+  @computedFrom('_closingDate')
+  public get isClosed(): boolean {
+    const now: moment.Moment = moment.utc();
+    const closingDate: moment.Moment = this._closingDate === undefined ? now : moment.utc(this._closingDate as MomentInput);
+    return now.isSameOrAfter(closingDate)
+  }
+
+  @computedFrom('_closingDate')
+  public get closingDate(): string {
+    return moment.utc(this._closingDate).local().format('DD-MM-YYYY hh:mm');
   }
 
   public cancelBubbling(event: Event): boolean {
