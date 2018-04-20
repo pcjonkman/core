@@ -1,13 +1,14 @@
 import { autoinject, BindingEngine, bindable, computedFrom } from 'aurelia-framework';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Subscription } from 'aurelia-event-aggregator';
-import { global, ICountry } from '../../../services/globals';
+import { global, ICountry, IFinalsPrediction } from '../../../services/globals';
 
 @autoinject()
 export class PoolCountrySelector {
   @bindable public title: string;
   @bindable public countries: ICountry[];
   @bindable public selectedCountries: ICountry[];
+  @bindable public predictedCountries: IFinalsPrediction[];
   @bindable public max: number;
   @bindable public disable: boolean = false;
   
@@ -84,6 +85,11 @@ export class PoolCountrySelector {
     return countries.indexOf(country) > -1;
   }
 
+  public isPredicted(country: ICountry) {
+    if (this.predictedCountries === null) { return false; }
+    return (this.predictedCountries.filter((pc) => { return pc.countryId === country.id; }).length !== 0);
+  }
+
   public toSelect(countries: ICountry[], max: number) {
     return `${ this.max - countries.length } to select`;
   }
@@ -99,5 +105,10 @@ export class PoolCountrySelector {
   @computedFrom('_show')
   public get show() {
     return this._show;
+  }
+
+  @computedFrom('predictedCountries')
+  public get score() {
+    return this.predictedCountries.length > 0 ? this.predictedCountries.length * this.predictedCountries[0].subScore : 0;
   }
 }

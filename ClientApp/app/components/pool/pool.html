@@ -1,11 +1,11 @@
 <template>
   <require from="../../services/messageStatusViewEngineHooks"></require>
   <div id="pool">
-    <h1>Pooltjuh
+    <h3>Pooltjuh
       <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">[
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.lastName } ]
       </span>
-    </h1>
+    </h3>
     
     <p if.bind="!pool"><em>Loading...</em></p>
 

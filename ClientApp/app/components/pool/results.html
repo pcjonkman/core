@@ -1,8 +1,8 @@
 <template>
-    <require from="./widgets/pool-prediction"></require>
+    <require from="./widgets/pool-result"></require>
 
-    <div id="predictions">
-      <h3>Pooltjuh predictions
+    <div id="results">
+      <h3>Pooltjuh results
         <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ${ pool.user.firstName } ${ pool.user.lastName }
         </span>
@@ -12,9 +12,7 @@
 
         <p if.bind="!pool"><em>Loading...</em></p>
 
-        <div if.bind="pool.poolPlayer.name">[ PoolPlayer: ${ pool.poolPlayer.name } ]</div>
-
-        <pool-prediction countries.bind="countries & signal:'data'" pool.bind="pool & signal:'data'"></pool-prediction>
+        <pool-result countries.bind="countries & signal:'data'" pool.bind="pool & signal:'data'"></pool-result>
 
       </div>
 

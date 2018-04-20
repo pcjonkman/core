@@ -58,11 +58,11 @@
         </tr>
       </table>
 
-      <pool-country-selector disable.bind="isDisabled" title.bind="'Round of 16'" max.bind="16" countries.bind="countries16 & signal:'data'" selected-countries.bind="selectedCountries16 & signal:'data'"></pool-country-selector>
-      <pool-country-selector disable.bind="isDisabled" title.bind="'Quarter-finals'" max.bind="8" countries.bind="countries8 & signal:'data'" selected-countries.bind="selectedCountries8 & signal:'data'"></pool-country-selector>
-      <pool-country-selector disable.bind="isDisabled" title.bind="'Semi-finals'" max.bind="4" countries.bind="countries4 & signal:'data'" selected-countries.bind="selectedCountries4 & signal:'data'"></pool-country-selector>
-      <pool-country-selector disable.bind="isDisabled" title.bind="'Finals'" max.bind="2" countries.bind="countries2 & signal:'data'" selected-countries.bind="selectedCountries2 & signal:'data'"></pool-country-selector>
-      <pool-country-selector disable.bind="isDisabled" title.bind="'Champion'" max.bind="1" countries.bind="countries1 & signal:'data'" selected-countries.bind="selectedCountries1 & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="isDisabled" title.bind="'Round of 16'" max.bind="16" countries.bind="countries16 & signal:'data'" selected-countries.bind="selectedCountries16 & signal:'data'" predicted-countries.bind="predictedCountries(1) & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="isDisabled" title.bind="'Quarter-finals'" max.bind="8" countries.bind="countries8 & signal:'data'" selected-countries.bind="selectedCountries8 & signal:'data'" predicted-countries.bind="predictedCountries(2) & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="isDisabled" title.bind="'Semi-finals'" max.bind="4" countries.bind="countries4 & signal:'data'" selected-countries.bind="selectedCountries4 & signal:'data'" predicted-countries.bind="predictedCountries(3) & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="isDisabled" title.bind="'Finals'" max.bind="2" countries.bind="countries2 & signal:'data'" selected-countries.bind="selectedCountries2 & signal:'data'" predicted-countries.bind="predictedCountries(4) & signal:'data'"></pool-country-selector>
+      <pool-country-selector disable.bind="isDisabled" title.bind="'Champion'" max.bind="1" countries.bind="countries1 & signal:'data'" selected-countries.bind="selectedCountries1 & signal:'data'" predicted-countries.bind="predictedCountries(5) & signal:'data'"></pool-country-selector>
 
       <div class="buttons text-right">
         <button type="button" class="btn btn-primary" click.delegate="post()" disabled.bind="isDisabled">Save</button>

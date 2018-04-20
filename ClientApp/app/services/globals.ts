@@ -39,10 +39,12 @@ export interface IPoolPlayer {
   name: string;
   subScore: string;
   openQuestions: string;
+  user: any;
 }
 
 export interface IPoolPoolPlayer {
   user: IUser|null;
+  poolPlayer: IPoolPlayer|null;
   poolPlayers: IPoolPlayer[];
 }
 
@@ -70,8 +72,15 @@ export interface IPoolSchedule {
 
 export interface IPoolPrediction {
   user: IUser| null;
+  poolPlayer: IPoolPlayer|null;
   match: IMatchPrediction[];
   finals: IFinalsPrediction[];
+}
+
+export interface IPoolResults {
+  user: IUser|null;
+  poolPlayer: IPoolPlayer|null;
+  schedule: ISchedule[];
 }
 
 export interface IFinalsPrediction {
@@ -102,15 +111,20 @@ export interface IMatchPrediction {
 export interface ISchedule {
   matchId: number;
   group: string;
+  selectCountry1?: ICountry;
+  selectCountry2?: ICountry;
   startDate: string;
   country1: string;
   country2: string;
+  country1Text: string;
+  country2Text: string;
   country1Code: string;
   country2Code: string;
   country1Id: number;
   country2Id: number;
   goals1: number;
   goals2: number;
+  isFinal: boolean;
 }
 
 export interface ICountry {

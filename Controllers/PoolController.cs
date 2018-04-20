@@ -85,16 +85,37 @@ namespace Core.Controllers
           return Json(new { user = user, schedule = query.poolSchedule().ToList() });
         }
 
-        [HttpGet("Prediction")]
-        public async Task<IActionResult> PoolPrediction()
+        [HttpGet("Results")]
+        public async Task<IActionResult> PoolResults()
         {
+          PoolPlayer poolPlayer = null;
           int id = 0;
           var user = await GetUser();
           var currentUser = await GetCurrentUserAsync();
           if (currentUser != null) {
             var selectedDbUser = _context.Users.SingleOrDefault(u => u.OwnerId == currentUser.Id);
             if (selectedDbUser != null && selectedDbUser.IsLoggedIn && checkWithCurrentUser(selectedDbUser)) {
-              var poolPlayer = _context.PoolPlayer.SingleOrDefault(u => u.UserId == selectedDbUser.Id);
+              poolPlayer = _context.PoolPlayer.SingleOrDefault(u => u.UserId == selectedDbUser.Id);
+              if (poolPlayer != null) {
+                id = poolPlayer.Id;
+              }
+            }
+          }
+
+          return Json(new { user = user, poolPlayer = poolPlayer, schedule = query.poolSchedule().ToList() });
+        }
+
+        [HttpGet("Prediction")]
+        public async Task<IActionResult> PoolPrediction()
+        {
+          PoolPlayer poolPlayer = null;
+          int id = 0;
+          var user = await GetUser();
+          var currentUser = await GetCurrentUserAsync();
+          if (currentUser != null) {
+            var selectedDbUser = _context.Users.SingleOrDefault(u => u.OwnerId == currentUser.Id);
+            if (selectedDbUser != null && selectedDbUser.IsLoggedIn && checkWithCurrentUser(selectedDbUser)) {
+              poolPlayer = _context.PoolPlayer.SingleOrDefault(u => u.UserId == selectedDbUser.Id);
               if (poolPlayer != null) {
                 id = poolPlayer.Id;
               }
@@ -104,7 +125,7 @@ namespace Core.Controllers
           var mp = query.poolMatchPrediction(id).ToList();
           var fp = query.poolFinalsPrediction(id).ToList();
 
-          return Json(new { user = user, match = mp, finals = fp });
+          return Json(new { user = user, poolPlayer = poolPlayer, match = mp, finals = fp });
         }
 
         [HttpGet("Prediction/{id}")]
@@ -116,12 +137,13 @@ namespace Core.Controllers
           }
           var mp = query.poolMatchPrediction(id.Value).ToList();
           var fp = query.poolFinalsPrediction(id.Value).ToList();
+          var pp = _context.PoolPlayer.SingleOrDefault(u => u.Id == id.Value);
 
           // if (mp.Count() > 0 && mp[0].PredictedGoals1 == -1 && mp[0].PredictedGoals2 == -1 && mp[0].SubScore == -1) {
           //   mp = new List<dynamic>();
           // }
 
-          return Json(new { user = user, match = mp, finals = fp });
+          return Json(new { user = user, poolPlayer = pp, match = mp, finals = fp });
         }
 
         [HttpPost("Prediction")]
@@ -219,6 +241,479 @@ namespace Core.Controllers
             return Json(new { user = user, poolPlayer = poolPlayer, messages = query.poolMessage().ToList() });
         }
 
+        [HttpPost("Results")]
+        public async Task<IActionResult> Post([FromBody] PoolMatchResults pool)
+        {
+          var currentUser = await GetCurrentUserAsync();
+          if (currentUser == null)
+          {
+              return Json(pool);
+          }
+          if (ModelState.IsValid)
+          {
+
+            bool chkScore = true;
+            foreach(var match in pool.schedule) {
+
+              // if (match.Goals1 == -1 || match.Goals2 == -1) {
+              //   continue;
+              // }
+
+              if ((match.Goals1 < -1 && match.Goals1 > 9) || (match.Goals2 < -1 && match.Goals2 > 9)) {
+                continue;
+              }
+
+              if (!match.isFinal)
+              {
+                Match m = _context.Match.Where(mat => mat.Id == match.MatchId).SingleOrDefault();
+                if ((m != null) && ((m.GoalsCountry1 != match.Goals1) || (m.GoalsCountry2 != match.Goals2) || chkScore))
+                {
+                  m.GoalsCountry1 = match.Goals1;
+                  m.GoalsCountry2 = match.Goals2;
+                  // if (match.Goals1 == -1)
+                  // {
+                  //     m.GoalsCountry1 = -1;
+                  // }
+                  // if (match.Goals2 == -1)
+                  // {
+                  //     m.GoalsCountry2 = -1;
+                  // }
+
+                  var query = from pred in _context.MatchPrediction
+                              where pred.MatchId == m.Id
+                              select pred;
+                  foreach (var pred in query)
+                  {
+                      pred.SubScore = 0;
+                      if (match.Goals1 == -1 || match.Goals2 == -1) {
+                        continue;
+                      }
+                      if ((pred.GoalsCountry1 == match.Goals1) && (pred.GoalsCountry2 == match.Goals2))
+                      {
+                          pred.SubScore += 5; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsMatchScore"]);
+                      }
+                      else if (match.Goals1.CompareTo(match.Goals2) == pred.GoalsCountry1.CompareTo(pred.GoalsCountry2))
+                      {
+                          pred.SubScore += 3; //Convert.ToInt32(ConfigurationManager.AppSettings["PointsMatchWinner"]);
+                      } else {
+                        if (pred.GoalsCountry1 == match.Goals1)
+                        {
+                            pred.SubScore += 1; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsMatchScore"]);
+                        }
+                        if (pred.GoalsCountry2 == match.Goals2)
+                        {
+                            pred.SubScore += 1; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsMatchScore"]);
+                        }
+                      }
+                  }
+                }
+              }
+              else
+              {
+                MatchFinals mf = _context.MatchFinals.Where(mat => mat.Id == match.MatchId).SingleOrDefault();
+                if ((mf != null) && ((mf.GoalsCountry1 != match.Goals1) || (mf.GoalsCountry2 != match.Goals2) || (mf.Country1Id != match.Country1Id) || (mf.Country2Id != match.Country2Id) || chkScore))
+                {
+                  mf.Country1Id = null;
+                  if (match.Country1Id != 0) { mf.Country1Id = match.Country1Id; }
+                  mf.Country2Id = null;
+                  if (match.Country2Id != 0) { mf.Country2Id = match.Country2Id; }
+                  mf.GoalsCountry1 = match.Goals1;
+                  mf.GoalsCountry2 = match.Goals2;
+
+                  int level = (mf.LevelNumber == null) ? 0 : Convert.ToInt32(mf.LevelNumber);
+                  int score = 25; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast1"]);
+                  if (level == 4) {
+                      if (mf.GoalsCountry1 > mf.GoalsCountry2)
+                      {
+                          UpdateSubscores(pool, (level + 1), score, mf.Country1Id);
+                      }
+                      if (mf.GoalsCountry1 < mf.GoalsCountry2)
+                      {
+                          UpdateSubscores(pool, (level + 1), score, mf.Country2Id);
+                      }
+                      if (mf.GoalsCountry1 == mf.GoalsCountry2)
+                      {
+                          UpdateSubscores(pool, (level + 1), score, -1);
+                      }
+                  }
+
+                  level = (mf.LevelNumber == null) ? 0 : Convert.ToInt32(mf.LevelNumber);
+                  score = 0;
+                  switch (level)
+                  {
+                      case 1:
+                          score = 5; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast16"]);
+                          break;
+                      case 2:
+                          score = 10; //Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast8"]);
+                          break;
+                      case 3:
+                          score = 15; //Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast4"]);
+                          break;
+                      case 4:
+                          score = 20; //Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast2"]);
+                          break;
+                      case 5:
+                          score = 25; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast1"]);
+                          break;
+
+                  }
+
+                  UpdateSubscores(pool, level, score, null);
+
+                }
+              }
+
+            }
+
+            _context.SaveChanges();
+
+          }
+
+          return Json(new { user = pool.user, poolPlayer = pool.poolPlayer, schedule = query.poolSchedule().ToList() });
+
+/*
+    protected void BtnCommitScore_Click(object sender, EventArgs e)
+    {
+        DataClassesDataContext db = new DataClassesDataContext();
+
+        foreach (ListViewItem item in lvMatches.Items)
+        {
+            if (((TextBox)item.FindControl("tbGoals1")).Text == string.Empty)
+            {
+                continue;
+            }
+
+            int goals1 = Convert.ToInt32(((TextBox)item.FindControl("tbGoals1")).Text);
+            int goals2 = Convert.ToInt32(((TextBox)item.FindControl("tbGoals2")).Text);
+            int matchID = Convert.ToInt32(((Literal)item.FindControl("litMatchID")).Text);
+            Match m = db.Matches.Where(mat => mat.ID == matchID).FirstOrDefault();
+            if ((m != null) && ((m.GoalsCountry1 != goals1) || (m.GoalsCountry2 != goals2) || cbRerun.Checked))
+            {
+                m.GoalsCountry1 = goals1;
+                m.GoalsCountry2 = goals2;
+                if (goals1 == -1)
+                {
+                    m.GoalsCountry1 = null;
+                }
+                if (goals2 == -1)
+                {
+                    m.GoalsCountry2 = null;
+                }
+
+                var query = from pred in db.MatchPredictions
+                            where pred.Match == matchID
+                            select pred;
+                foreach (var pred in query)
+                {
+                    if ((pred.GoalsCountry1 == goals1) && (pred.GoalsCountry2 == goals2))
+                    {
+                        pred.Subscore = Convert.ToInt32(ConfigurationManager.AppSettings["PointsMatchScore"]);
+                    }
+                    else if (goals1.CompareTo(goals2) == ((int)pred.GoalsCountry1).CompareTo((int)pred.GoalsCountry2))
+                    {
+                        pred.Subscore = Convert.ToInt32(ConfigurationManager.AppSettings["PointsMatchWinner"]);
+                    }
+                    else
+                    {
+                        pred.Subscore = 0;
+                    }
+                }
+            }
+
+            MatchFinal mf = db.MatchFinals.Where(mat => mat.ID == matchID).FirstOrDefault();
+            if ((mf != null) && ((mf.GoalsCountry1 != goals1) || (mf.GoalsCountry2 != goals2) || cbRerun.Checked))
+            {
+                mf.GoalsCountry1 = goals1;
+                mf.GoalsCountry2 = goals2;
+                if (goals1 == -1)
+                {
+                    mf.GoalsCountry1 = null;
+                }
+                if (goals2 == -1)
+                {
+                    mf.GoalsCountry2 = null;
+                }
+
+
+                int level = (mf.LevelNumber == null) ? 0 : Convert.ToInt32(mf.LevelNumber);
+                int score = Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast1"]);
+                if (level == 4) {
+                    if (goals1 > goals2)
+                    {
+                        UpdateSubscores(matches(db), (level + 1), score, mf.Country1);
+                    }
+                    if (goals1 < goals2)
+                    {
+                        UpdateSubscores(matches(db), (level + 1), score, mf.Country2);
+                    }
+                    if (goals1 == goals2)
+                    {
+                        UpdateSubscores(matches(db), (level + 1), score, -1);
+                    }
+                }
+            }
+
+        }
+
+        db.SubmitChanges();
+
+        listview_Matches(db);
+        listboxes(db);
+
+
+    }
+
+    protected void UpdateSubscores(List<dynamic> matches, int FinalLevel, int scoreAmount, int? country)
+    {
+        DataClassesDataContext db = new DataClassesDataContext();
+        List<int> countries = new List<int>();
+        int finalID = db.Finals.Where(fn => fn.LevelNumber == FinalLevel).First().ID;
+        var curr = from fp in db.FinalsPlacings
+                   where fp.Final == finalID
+                   select fp;
+        foreach (var match in matches)
+        {
+            if (match.Finals)
+            {
+                if (country == null)
+                {
+                    int country1 = (((dynamic)match).Country1ID == null) ? 0 : ((dynamic)match).Country1ID;
+                    if (country1 != 0)
+                    {
+                        FinalsPlacing fp1 = new FinalsPlacing() { Final = finalID };
+                        fp1.Country = country1;
+                        countries.Add(country1);
+                        if (curr.Where(c => c.Country == fp1.Country).Count() == 0)
+                        {
+                            db.FinalsPlacings.InsertOnSubmit(fp1);
+                        }
+                    }
+                    int country2 = (((dynamic)match).Country2ID == null) ? 0 : ((dynamic)match).Country2ID;
+                    if (country2 != 0)
+                    {
+                        FinalsPlacing fp2 = new FinalsPlacing() { Final = finalID };
+                        fp2.Country = country2;
+                        countries.Add(country2);
+                        if (curr.Where(c => c.Country == fp2.Country).Count() == 0)
+                        {
+                            db.FinalsPlacings.InsertOnSubmit(fp2);
+                        }
+                    }
+                }
+                else
+                {
+                    if (country != -1)
+                    {
+                        string finalName = db.Finals.Where(fn => fn.LevelNumber == (FinalLevel - 1)).First().LevelName;
+                        if (((dynamic)match).Group == finalName)
+                        {
+                            int countryID = (country == null) ? 0 : Convert.ToInt32(country);
+                            if (countryID != 0)
+                            {
+                                FinalsPlacing fp = new FinalsPlacing() { Final = finalID };
+                                fp.Country = countryID;
+                                countries.Add(countryID);
+                                if (curr.Where(c => c.Country == fp.Country).Count() == 0)
+                                {
+                                    db.FinalsPlacings.InsertOnSubmit(fp);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        var removequery = from c in curr
+                          where !(countries.Contains(c.Country))
+                          select c;
+
+        db.FinalsPlacings.DeleteAllOnSubmit(removequery);
+
+        var query = from pred in db.FinalsPredictions
+                    where pred.Final == finalID
+                    select pred;
+
+        foreach (var pred in query)
+        {
+            if (countries.Contains(pred.Country))
+            {
+                pred.SubScore = scoreAmount;
+            }
+            else
+            {
+                pred.SubScore = 0;
+            }
+        }
+        db.SubmitChanges();
+    }
+
+    protected void UpdateSubscores(ListBox lb, int FinalLevel, int scoreAmount)
+    {
+        DataClassesDataContext db = new DataClassesDataContext();
+        List<int> countries = new List<int>();
+        int finalID = db.Finals.Where(fn => fn.LevelNumber == FinalLevel).First().ID;
+        var curr = from fp in db.FinalsPlacings
+                   where fp.Final == finalID
+                   select fp;
+
+        List<FinalsPlacing> newPlacings = new List<FinalsPlacing>();
+        foreach (ListItem i in lb.Items)
+        {
+            FinalsPlacing f = new FinalsPlacing() { Final = finalID };
+            f.Country = Convert.ToInt32(i.Value);
+            countries.Add(Convert.ToInt32(i.Value));
+            if (curr.Where(c=>c.Country == f.Country).Count() == 0)
+            {
+                db.FinalsPlacings.InsertOnSubmit(f);
+            }
+            newPlacings.Add(f);
+        }
+        var removequery = from c in curr
+                          where !(countries.Contains(c.Country))
+                          select c;
+
+        db.FinalsPlacings.DeleteAllOnSubmit(removequery);
+        
+        var query = from pred in db.FinalsPredictions
+                    where pred.Final == finalID
+                    select pred;
+
+        foreach (var pred in query)
+        {
+            if (countries.Contains(pred.Country))
+            {
+                pred.SubScore = scoreAmount;
+            }
+            else
+            {
+                pred.SubScore = 0;
+            }
+        }
+        db.SubmitChanges();
+    }
+
+*/
+        }
+
+        protected void UpdateSubscores(PoolMatchResults pool, int FinalLevel, int scoreAmount, int? country)
+        {
+
+                // var finalLevels = (from p in _context.Finals
+                //                     select p.LevelNumber);
+                // foreach(var finalLevel in finalLevels) {
+                //   List<FinalsPrediction> finalPrediction = new List<FinalsPrediction>();
+                //   int finalId = _context.Finals.Where(fn => fn.LevelNumber == finalLevel).First().Id;
+                //   var curr = from fp in _context.FinalsPrediction
+                //               where fp.FinalsId == finalId && fp.PoolPlayerId == poolPlayer.Id
+                //               select fp;
+                //   foreach (var finals in pool.finals.Where(f => f.Level == finalLevel)) {
+                //     FinalsPrediction f = new FinalsPrediction() { FinalsId = finalId, PoolPlayerId = poolPlayer.Id };
+                //     f.CountryId = finals.CountryId;
+                //     finalPrediction.Add(f);
+                //     if (curr.Where(c => c.CountryId == f.CountryId).Count() == 0)
+                //     {
+                //       _context.FinalsPrediction.Add(f);
+                //     }
+                //   }
+                //   var removequery = from c in curr
+                //                       // where (finalPrediction.Where(fp => fp.CountryId == c.CountryId).SingleOrDefault() != null)
+                //                       where !(finalPrediction.Any(fpCurr => fpCurr.CountryId == c.CountryId))
+                //                       select c;
+                //   _context.FinalsPrediction.RemoveRange(removequery);
+                // }
+
+
+            List<int> countries = new List<int>();
+            int finalId = _context.Finals.Where(fn => fn.LevelNumber == FinalLevel).First().Id;
+            var curr = from fp in _context.FinalsPlacing
+                      where fp.FinalsId == finalId
+                      select fp;
+            foreach (var match in pool.schedule.Where(f => f.isFinal))
+            {
+                // if (match.isFinal)
+                // {
+                    if (country == null)
+                    {
+                        // int country1 = (((dynamic)match).Country1ID == null) ? 0 : ((dynamic)match).Country1ID;
+                        if (match.Country1Id != 0)
+                        {
+                            FinalsPlacing fp1 = new FinalsPlacing() { FinalsId = finalId };
+                            fp1.CountryId = match.Country1Id;
+                            countries.Add(match.Country1Id);
+                            if (curr.Where(c => c.CountryId == fp1.CountryId).Count() == 0)
+                            {
+                                // db.FinalsPlacings.InsertOnSubmit(fp1);
+                                _context.FinalsPlacing.Add(fp1);
+                            }
+                        }
+                        // int country2 = (((dynamic)match).Country2ID == null) ? 0 : ((dynamic)match).Country2ID;
+                        if (match.Country2Id != 0)
+                        {
+                            FinalsPlacing fp2 = new FinalsPlacing() { FinalsId = finalId };
+                            fp2.CountryId = match.Country2Id;
+                            countries.Add(match.Country2Id);
+                            if (curr.Where(c => c.CountryId == fp2.CountryId).Count() == 0)
+                            {
+                                // db.FinalsPlacings.InsertOnSubmit(fp2);
+                                _context.FinalsPlacing.Add(fp2);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (country != -1)
+                        {
+                            string finalName = _context.Finals.Where(fn => fn.LevelNumber == (FinalLevel - 1)).First().LevelName;
+                            if (match.Group == finalName)
+                            {
+                                int countryId = (country == null) ? 0 : Convert.ToInt32(country);
+                                if (countryId != 0)
+                                {
+                                    FinalsPlacing fp = new FinalsPlacing() { FinalsId = finalId };
+                                    fp.CountryId = countryId;
+                                    countries.Add(countryId);
+                                    if (curr.Where(c => c.CountryId == fp.CountryId).Count() == 0)
+                                    {
+                                        _context.FinalsPlacing.Add(fp);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                // }
+            }
+            // var removequery = from c in curr
+            //                   where !(countries.Contains(c.Country))
+            //                   select c;
+
+            // db.FinalsPlacings.DeleteAllOnSubmit(removequery);
+            var removequery = from c in curr
+                                // where (finalPrediction.Where(fp => fp.CountryId == c.CountryId).SingleOrDefault() != null)
+                                where !(countries.Any(countryId => countryId == c.CountryId))
+                                select c;
+            _context.FinalsPlacing.RemoveRange(removequery);
+
+            var query = from pred in _context.FinalsPrediction
+                        where pred.FinalsId == finalId
+                        select pred;
+
+            foreach (var pred in query)
+            {
+                if (countries.Contains(pred.CountryId))
+                {
+                    pred.SubScore = scoreAmount;
+                }
+                else
+                {
+                    pred.SubScore = 0;
+                }
+            }
+            _context.SaveChanges();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PoolMessage message)
         {
@@ -261,8 +756,32 @@ namespace Core.Controllers
 
         public class PoolPredictions {
           public PoolUser user { get; set; }
-          public List<PoolMatchPredicion> match { get; set; }
+          public List<PoolMatchPrediction> match { get; set; }
           public List<PoolFinalsPrediction> finals { get; set; }
+        }
+
+        public class PoolMatchResults {
+          public PoolUser user { get; set; }
+          public PoolPlayer poolPlayer { get; set; }
+          public List<PoolMatch> schedule { get; set; }
+        }
+
+        public class PoolMatch {
+          public int MatchId { get; set; }
+          public string Group { get; set; }
+          public string Country1 { get; set; }
+          public string Country2 { get; set; }
+          public string Country1Text { get; set; }
+          public string Country2Text { get; set; }
+          public int Country1Id { get; set; }
+          public int Country2Id { get; set; }
+          public string Country1Code { get; set; }
+          public string Country2Code { get; set; }
+          public DateTime StartDate { get; set; }
+          public string Location { get; set; }
+          public int Goals1 { get; set; }
+          public int Goals2 { get; set; }
+          public bool isFinal { get; set; }
         }
 
         public class PoolFinalsPrediction {
@@ -273,7 +792,7 @@ namespace Core.Controllers
           public int SubScore { get; set; }
         }
 
-        public class PoolMatchPredicion {
+        public class PoolMatchPrediction {
           public int MatchId { get; set; }
           public string Group { get; set; }
           public string Country1 { get; set; }
@@ -347,6 +866,7 @@ namespace Core.Controllers
                         Score = pl.MatchPredictions.Sum(s => s.SubScore) + pl.FinalsPredictions.Sum(s => s.SubScore) + pl.SubScore
                       });
         var rankquery = (from rp in query
+                          orderby rp.Score descending
                           select new {
                             Rank = query.Count(p2 => p2.Score > rp.Score) + 1,
                             Id = rp.Id,
@@ -392,6 +912,8 @@ namespace Core.Controllers
                       Group = c1.Group,
                       Country1 = c1.Name,
                       Country2 = c2.Name,
+                      Country1Text = c1.Group,
+                      Country2Text = c2.Group,
                       Country1Code = c1.Code,
                       Country2Code = c2.Code,
                       Country1Id = c1.Id,
@@ -399,7 +921,8 @@ namespace Core.Controllers
                       StartDate= m.StartDate, 
                       Location = m.Location,
                       Goals1 = m.GoalsCountry1,
-                      Goals2 = m.GoalsCountry2
+                      Goals2 = m.GoalsCountry2,
+                      isFinal = false
                     });
 
         var matchfinals = (from m in _context.MatchFinals.OrderBy(m => m.StartDate)
@@ -413,6 +936,8 @@ namespace Core.Controllers
                           Group = f.LevelName,
                           Country1 = (c1 == null ? m.Country1Text : c1.Name),
                           Country2 = (c2 == null ? m.Country2Text : c2.Name),
+                          Country1Text = m.Country1Text,
+                          Country2Text = m.Country2Text,
                           Country1Code = c1.Code,
                           Country2Code = c2.Code,
                           Country1Id = (c1 == null ? 0 : c1.Id),
@@ -420,7 +945,8 @@ namespace Core.Controllers
                           StartDate = m.StartDate,
                           Location = m.Location,
                           Goals1 = m.GoalsCountry1,
-                          Goals2 = m.GoalsCountry2
+                          Goals2 = m.GoalsCountry2,
+                          isFinal = true
                         });
 
         return matches.Concat(matchfinals);

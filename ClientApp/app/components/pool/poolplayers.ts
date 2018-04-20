@@ -23,7 +23,7 @@ export class PoolPlayers {
         this.pool = data;
     })
     .catch((errorMessage: string) => {
-      this.pool = { user: null, poolPlayers: undefined };
+      this.pool = { user: null, poolPlayer: undefined, poolPlayers: undefined };
       global.toastr(errorMessage, true);
     });
   }

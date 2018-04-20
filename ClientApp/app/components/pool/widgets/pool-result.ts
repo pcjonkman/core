@@ -5,13 +5,13 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as moment from 'moment';
 import { MomentInput } from 'moment';
-import { global, IPoolPrediction, IMatchPrediction, IFinalsPrediction, ICountry } from '../../../services/globals';
+import { global, IPoolPrediction, IMatchPrediction, IFinalsPrediction, ICountry, IPoolResults, ISchedule } from '../../../services/globals';
 import { BootstrapFormRenderer } from '../../../services/bootstrapFormRenderer';
 
 @autoinject()
-export class PoolPrediction {
+export class PoolResult {
   @bindable public country: ICountry;
-  @bindable public pool: IPoolPrediction;
+  @bindable public pool: IPoolResults;
   @bindable public countries: ICountry[] = [];
   public countries1: ICountry[] = [];
   public countries2: ICountry[] = [];
@@ -23,10 +23,11 @@ export class PoolPrediction {
   public selectedCountries4: ICountry[] = [];
   public selectedCountries8: ICountry[] = [];
   public selectedCountries16: ICountry[] = [];
-  
-  public predictionRules: ValidationRules;
+  public selectCountry: ICountry[] = [];
 
-  private _closingDate: string = "2018-05-01T00:00:00"
+  public validationRules: ValidationRules;
+
+  private _closingDate: string = "2018-12-19T10:39:00"
 
   private _bindingEngine: BindingEngine;
   private _bindingSignaler: BindingSignaler;
@@ -51,6 +52,8 @@ export class PoolPrediction {
       this.countries4 = this.countries.slice(0);
       this.countries8 = this.countries.slice(0);
       this.countries16 = this.countries.slice(0);
+      this.selectCountry = this.countries.slice(0);
+      this.selectCountry.unshift({ id: 0, name: '', code: '', group: '' });
       window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
     }));
     this._subscriptions.push(this._bindingEngine.propertyObserver(this, 'pool').subscribe(() => {
@@ -64,30 +67,30 @@ export class PoolPrediction {
       this.countries4 = this.countries.slice(0);
       this.countries8 = this.countries.slice(0);
       this.countries16 = this.countries.slice(0);
-      this.pool.finals.forEach((fp: IFinalsPrediction) => {
-        switch(fp.level) {
-          case 1:
-            this.selectedCountries16.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
-            this.countries16.splice(this.countries16.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
-            break;
-          case 2:
-            this.selectedCountries8.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
-            this.countries8.splice(this.countries8.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
-            break;
-          case 3:
-            this.selectedCountries4.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
-            this.countries4.splice(this.countries4.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
-            break;
-          case 4:
-            this.selectedCountries2.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
-            this.countries2.splice(this.countries2.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
-            break;
-          case 5:
-            this.selectedCountries1.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
-            this.countries1.splice(this.countries1.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
-            break;
-        }
-      });
+      // this.pool.finals.forEach((fp: IFinalsPrediction) => {
+      //   switch(fp.level) {
+      //     case 1:
+      //       this.selectedCountries16.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
+      //       this.countries16.splice(this.countries16.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
+      //       break;
+      //     case 2:
+      //       this.selectedCountries8.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
+      //       this.countries8.splice(this.countries8.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
+      //       break;
+      //     case 3:
+      //       this.selectedCountries4.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
+      //       this.countries4.splice(this.countries4.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
+      //       break;
+      //     case 4:
+      //       this.selectedCountries2.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
+      //       this.countries2.splice(this.countries2.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
+      //       break;
+      //     case 5:
+      //       this.selectedCountries1.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
+      //       this.countries1.splice(this.countries1.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
+      //       break;
+      //   }
+      // });
       window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
     }));
   }
@@ -108,37 +111,47 @@ export class PoolPrediction {
       (min, max) => ({ min, max })
     );
 
-    this.predictionRules = ValidationRules
-    .ensure('predictedGoals1')
-      .maxLength(1)
-        .when((mp: IMatchPrediction) => mp.predictedGoals1 !== -1)
-      .satisfiesRule('integerRange', 0, 9)
-        .when((mp: IMatchPrediction) => mp.predictedGoals1 !== -1)
-    .ensure('predictedGoals2')
-      .maxLength(1)
-        .when((mp: IMatchPrediction) => mp.predictedGoals2 !== -1)
-      .satisfiesRule('integerRange', 0, 9)
-        .when((mp: IMatchPrediction) => mp.predictedGoals2 !== -1)
+    this.validationRules = ValidationRules
+    .ensure('goals1')
+      .maxLength(2)
+        .when((s: ISchedule) => s.goals1 !== -1)
+      .satisfiesRule('integerRange', -1, 9)
+        .when((s: ISchedule) => s.goals1 !== -1)
+    .ensure('goals2')
+      .maxLength(2)
+        .when((s: ISchedule) => s.goals2 !== -1)
+      .satisfiesRule('integerRange', -1, 9)
+        .when((s: ISchedule) => s.goals2 !== -1)
     .rules;
   }
 
   @computedFrom('pool')
   public get match() {
-    return this.pool.match;
-    // return this.pool.match.filter((item: IMatchPrediction) => {
+    return this.pool.schedule.map((item: ISchedule) => {
+      item.selectCountry1 = this.countries.find((country: ICountry) => { return country.id === item.country1Id; });;
+      item.selectCountry2 = this.countries.find((country: ICountry) => { return country.id === item.country2Id; });;
+      return item;
+    });
+
+    // return this.pool.schedule.map((item: ISchedule) => {
+    //   item.group1 = item.group;
+    //   item.group2 = item.group;
+    //   return item;
+    // });
+    // return this.pool.schedule.filter((item: ISchedule) => {
     //   return item.group === 'A' || 
-    //   item.group ==='B' || 
-    //   item.group ==='C' || 
-    //   item.group ==='D' || 
-    //   item.group ==='E' || 
-    //   item.group ==='F';
-    // })
+    //           item.group ==='B' || 
+    //           item.group ==='C' || 
+    //           item.group ==='D' || 
+    //           item.group ==='E' || 
+    //           item.group ==='F';
+    // });
   }
 
   @computedFrom('pool', 'controller', 'isClosed')
   public get isDisabled(): boolean {
     if (!this.pool || !this.pool.user) { return true; }
-    if (this.isAdmin(this.pool.user.roles)) { return false; }
+    if (!this.isAdmin(this.pool.user.roles)) { return true; }
 
     return (
       !this.pool.user.isLoggedIn ||
@@ -158,10 +171,6 @@ export class PoolPrediction {
   @computedFrom('_closingDate')
   public get closingDate(): string {
     return moment.utc(this._closingDate).local().format('DD-MM-YYYY hh:mm');
-  }
-
-  public predictedCountries(level: number) {
-    return this.pool.finals.filter(pf => pf.level === level && pf.subScore !== 0);
   }
 
   public isAdmin(roles: string[]): boolean {
@@ -215,31 +224,68 @@ export class PoolPrediction {
     global.toastr(schedule.matchId);
   }
 
+  public isFinals(schedule: ISchedule) {
+    return (!(schedule.group === 'A' || 
+            schedule.group === 'B' || 
+            schedule.group === 'C' || 
+            schedule.group === 'D' || 
+            schedule.group === 'E' || 
+            schedule.group === 'F'));
+  }
+
+  public changeSelected(schedule: ISchedule, country: ICountry, home: boolean) {
+    if (home) {
+      // if (schedule.country1Id === 0) {
+      //   schedule.group1 = schedule.country1;
+      // }
+      schedule.country1 = country.name;
+      schedule.country1Id = country.id;
+      schedule.country1Code = country.code;
+      if (schedule.country1Id === 0) {
+        schedule.country1 = schedule.country1Text;
+        schedule.country1Code = null;
+        // schedule.group1 = schedule.country1;
+      }
+    } else {
+      // if (schedule.country2Id === 0) {
+      //   schedule.group2 = schedule.country2;
+      // }
+      schedule.country2 = country.name;
+      schedule.country2Id = country.id;
+      schedule.country2Code = country.code;
+      if (schedule.country2Id === 0) {
+        schedule.country2 = schedule.country2Text;
+        schedule.country2Code = null;
+        // schedule.group2 = schedule.country2;
+      }
+    }
+  }
+
   public post() {
-    this.pool.finals = [];
-    this.selectedCountries16.forEach((country: ICountry) => {
-      this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 1, subScore: 0 });
-    });
-    this.selectedCountries8.forEach((country: ICountry) => {
-      this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 2, subScore: 0 });
-    });
-    this.selectedCountries4.forEach((country: ICountry) => {
-      this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 3, subScore: 0 });
-    });
-    this.selectedCountries2.forEach((country: ICountry) => {
-      this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 4, subScore: 0 });
-    });
-    this.selectedCountries1.forEach((country: ICountry) => {
-      this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 5, subScore: 0 });
-    });
-    this.controller.validate({ object: this.pool, propertyName: 'match', rules: this.predictionRules })
+  //   this.pool.finals = [];
+  //   this.selectedCountries16.forEach((country: ICountry) => {
+  //     this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 1, subScore: 0 });
+  //   });
+  //   this.selectedCountries8.forEach((country: ICountry) => {
+  //     this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 2, subScore: 0 });
+  //   });
+  //   this.selectedCountries4.forEach((country: ICountry) => {
+  //     this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 3, subScore: 0 });
+  //   });
+  //   this.selectedCountries2.forEach((country: ICountry) => {
+  //     this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 4, subScore: 0 });
+  //   });
+  //   this.selectedCountries1.forEach((country: ICountry) => {
+  //     this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 5, subScore: 0 });
+  //   });
+    this.controller.validate({ object: this.pool, propertyName: 'schedule', rules: this.validationRules })
       .then(result => {
         if (result.valid) {
-          this._http.fetch('/api/pool/prediction', {
+          this._http.fetch('/api/pool/results', {
               method: 'post',
               body: json(this.pool)
           })
-          .then(result => result.json() as Promise<IPoolPrediction>)
+          .then(result => result.json() as Promise<IPoolResults>)
           .then(data => {
               this.pool = data;
               window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);

@@ -104,6 +104,13 @@ export class App {
             nav: true,
             title: 'Predictions'
         }, {
+            route: 'results',
+            name: 'results',
+            settings: { icon: 'tasks' },
+            moduleId: PLATFORM.moduleName('../pool/results'),
+            nav: true,
+            title: 'Results'
+        }, {
             route: 'core',
             name: 'core',
             settings: { icon: 'cog' },
