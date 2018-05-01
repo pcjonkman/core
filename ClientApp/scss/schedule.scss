@@ -122,6 +122,11 @@
           background-color: #ccc;
         }
 
+        &.disabled {
+          background-color: #eee;
+          border-bottom-color: #fff;
+        }
+
         & span.selected {
           color: green;
         }

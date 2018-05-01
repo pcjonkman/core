@@ -23,7 +23,8 @@ export class PoolPrediction {
   public selectedCountries4: ICountry[] = [];
   public selectedCountries8: ICountry[] = [];
   public selectedCountries16: ICountry[] = [];
-  
+  private disable: boolean = false;
+
   public predictionRules: ValidationRules;
 
   private _closingDate: string = "2018-05-01T00:00:00"
@@ -135,8 +136,9 @@ export class PoolPrediction {
     // })
   }
 
-  @computedFrom('pool', 'controller', 'isClosed')
+  @computedFrom('pool', 'controller', 'isClosed', 'disable')
   public get isDisabled(): boolean {
+    if (this.disable) { return true; }
     if (!this.pool || !this.pool.user) { return true; }
     if (this.isAdmin(this.pool.user.roles)) { return false; }
 
@@ -235,6 +237,7 @@ export class PoolPrediction {
     this.controller.validate({ object: this.pool, propertyName: 'match', rules: this.predictionRules })
       .then(result => {
         if (result.valid) {
+          this.disable = true;
           this._http.fetch('/api/pool/prediction', {
               method: 'post',
               body: json(this.pool)
@@ -242,6 +245,7 @@ export class PoolPrediction {
           .then(result => result.json() as Promise<IPoolPrediction>)
           .then(data => {
               this.pool = data;
+              this.disable = false;
               window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
               global.toastr('Data send');
           });

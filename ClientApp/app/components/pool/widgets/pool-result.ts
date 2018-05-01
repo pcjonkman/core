@@ -24,6 +24,7 @@ export class PoolResult {
   public selectedCountries8: ICountry[] = [];
   public selectedCountries16: ICountry[] = [];
   public selectCountry: ICountry[] = [];
+  public disable: boolean = false;
 
   public validationRules: ValidationRules;
 
@@ -148,8 +149,9 @@ export class PoolResult {
     // });
   }
 
-  @computedFrom('pool', 'controller', 'isClosed')
+  @computedFrom('pool', 'controller', 'isClosed', 'disable')
   public get isDisabled(): boolean {
+    if (this.disable) { return true; }
     if (!this.pool || !this.pool.user) { return true; }
     if (!this.isAdmin(this.pool.user.roles)) { return true; }
 
@@ -281,6 +283,7 @@ export class PoolResult {
     this.controller.validate({ object: this.pool, propertyName: 'schedule', rules: this.validationRules })
       .then(result => {
         if (result.valid) {
+          this.disable = true;
           this._http.fetch('/api/pool/results', {
               method: 'post',
               body: json(this.pool)
@@ -288,6 +291,7 @@ export class PoolResult {
           .then(result => result.json() as Promise<IPoolResults>)
           .then(data => {
               this.pool = data;
+              this.disable = false;
               window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
               global.toastr('Data send');
           });

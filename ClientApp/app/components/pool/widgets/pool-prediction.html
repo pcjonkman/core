@@ -1,5 +1,6 @@
 <template>
   <require from="./pool-country-selector"></require>
+  <require from="./spinner"></require>
   <div class="prediction">
     <div class="well" if.bind="pool && !pool.user.isLoggedIn">You're not logged in.</div>
     <div class="panel panel-primary" if.bind="pool && pool.match && pool.match.length !== 0">
@@ -65,7 +66,7 @@
       <pool-country-selector disable.bind="isDisabled" title.bind="'Champion'" max.bind="1" countries.bind="countries1 & signal:'data'" selected-countries.bind="selectedCountries1 & signal:'data'" predicted-countries.bind="predictedCountries(5) & signal:'data'"></pool-country-selector>
 
       <div class="buttons text-right">
-        <button type="button" class="btn btn-primary" click.delegate="post()" disabled.bind="isDisabled">Save</button>
+        <button type="button" class="btn btn-primary" click.delegate="post()" disabled.bind="isDisabled"><spinner if.bind="disable"></spinner> Save</button>
       </div>
       <validation-summary
         errors.bind="controller.errors"

@@ -641,7 +641,10 @@ namespace Core.Controllers
                         {
                             FinalsPlacing fp1 = new FinalsPlacing() { FinalsId = finalId };
                             fp1.CountryId = match.Country1Id;
-                            countries.Add(match.Country1Id);
+                            if (_context.Finals.Where(fn => fn.Id == finalId).First().LevelName == match.Group)
+                            {
+                              countries.Add(match.Country1Id);
+                            }
                             if (curr.Where(c => c.CountryId == fp1.CountryId).Count() == 0)
                             {
                                 // db.FinalsPlacings.InsertOnSubmit(fp1);
@@ -653,7 +656,10 @@ namespace Core.Controllers
                         {
                             FinalsPlacing fp2 = new FinalsPlacing() { FinalsId = finalId };
                             fp2.CountryId = match.Country2Id;
-                            countries.Add(match.Country2Id);
+                            if (_context.Finals.Where(fn => fn.Id == finalId).First().LevelName == match.Group)
+                            {
+                              countries.Add(match.Country2Id);
+                            }
                             if (curr.Where(c => c.CountryId == fp2.CountryId).Count() == 0)
                             {
                                 // db.FinalsPlacings.InsertOnSubmit(fp2);

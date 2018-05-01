@@ -15,7 +15,7 @@
           </div>
           <div class="col-xs-12 text-center">
             <div class="select scrollable text-left">
-              <div repeat.for="country of countries" click.trigger="addSelect(country)" class="${$parent.isSelected(country, addCountries) ? 'selected' : '' & signal:'selected'}">
+              <div repeat.for="country of countries" click.trigger="addSelect(country)" class="${$parent.isSelected(country, addCountries) ? 'selected' : '' & signal:'selected'} ${disable ? 'disabled' : ''}">
                 <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />
                 <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
                 <span>${ country.name }</span>
@@ -54,7 +54,7 @@
           </div>
           <div class="col-xs-12 text-center">
             <div class="select scrollable text-left">
-              <div repeat.for="country of selectedCountries" click.trigger="removeSelect(country)" class="${$parent.isSelected(country, removeCountries) ? 'selected' : '' & signal:'selected'}">
+              <div repeat.for="country of selectedCountries" click.trigger="removeSelect(country)" class="${$parent.isSelected(country, removeCountries) ? 'selected' : '' & signal:'selected'} ${disable ? 'disabled' : ''}">
                 <img if.bind="imageUrl(country.code)" src.bind="imageUrl(country.code)" />
                 <span class="visible-tn visible-xxs"></span><span class="visible-xs"></span>
                 <span class="${$parent.isPredicted(country) ? 'selected' : '' }">${ country.name }</span>

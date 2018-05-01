@@ -1,0 +1,26 @@
+.spinner {
+  display: inline-block;
+
+  & svg {
+    fill: #fff;
+    margin-bottom: -4px;
+    height: 32px;
+    width: 32px;
+    animation: spin 3000ms linear infinite;
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  button & svg {
+    height: 20px;
+    width: 20px;
+  }
+}
