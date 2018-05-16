@@ -9,14 +9,10 @@ interface IEventArguments {
 
 @autoinject()
 export class Predictions {
-  private _bindingSignaler: BindingSignaler;
-  private _http: HttpClient;
   public countries: ICountry[];
   public pool: IPoolPrediction;
 
-  constructor(bindingSignaler: BindingSignaler, http: HttpClient) {
-    this._bindingSignaler = bindingSignaler;
-    this._http = http;
+  constructor(private readonly _bindingSignaler: BindingSignaler, private readonly _http: HttpClient) {
   }
 
   public activate(args: IEventArguments) {

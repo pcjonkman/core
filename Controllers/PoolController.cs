@@ -322,7 +322,7 @@ namespace Core.Controllers
 
                   int level = (mf.LevelNumber == null) ? 0 : Convert.ToInt32(mf.LevelNumber);
                   int score = 25; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast1"]);
-                  if (level == 4) {
+                  if (level == 4 || level == 6) {
                       if (mf.GoalsCountry1 > mf.GoalsCountry2)
                       {
                           UpdateSubscores(pool, (level + 1), score, mf.Country1Id);
@@ -355,6 +355,12 @@ namespace Core.Controllers
                           break;
                       case 5:
                           score = 25; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast1"]);
+                          break;
+                      case 6:
+                          score = 20; //Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast2"]);
+                          break;
+                      case 7:
+                          score = 25; // Convert.ToInt32(ConfigurationManager.AppSettings["PointsLast13"]);
                           break;
 
                   }

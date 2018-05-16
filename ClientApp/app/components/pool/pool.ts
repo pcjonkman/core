@@ -9,8 +9,6 @@ import { BootstrapFormRenderer } from '../../services/bootstrapFormRenderer';
 
 @autoinject()
 export class Pool {
-  private _http: HttpClient;
-  private _router: Router;
   public pool: IPool;
   public message: IMessage;
   public ranking: IRank[];
@@ -18,9 +16,7 @@ export class Pool {
   public controller: ValidationController;
   public nameRules: ValidationRules;
   
-  constructor(http: HttpClient, router: Router, private validator: Validator, controllerFactory: ValidationControllerFactory) {
-    this._http = http;
-    this._router = router;
+  constructor(private readonly _http: HttpClient, private readonly _router: Router, private validator: Validator, controllerFactory: ValidationControllerFactory) {
     this.controller = controllerFactory.createForCurrentScope(validator);
     this.controller.addRenderer(new BootstrapFormRenderer());
     this.setupValidation();
@@ -144,13 +140,7 @@ export class Pool {
 
   public formatDate(value: string): string {
     const DATEFORMAT: string = 'D MMMM YYYY HH:mm';
-    const date: moment.Moment = moment.utc(value);
-
-    if (date.isValid()) {
-      return date.local().format(DATEFORMAT);
-    }
-
-    return value;
+    return global.formatDate(value, DATEFORMAT);
   }
 
   public select(id: number) {

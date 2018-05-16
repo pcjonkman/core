@@ -15,15 +15,11 @@ export class PoolCountrySelector {
   public addCountries: ICountry[] = [];
   public removeCountries: ICountry[] = [];
   
-  private _bindingEngine: BindingEngine;
-  private _bindingSignaler: BindingSignaler;
   private _subscriptions: Subscription[] = [];
 
   private _show: boolean = false;
   
-  constructor(bindingEngine: BindingEngine, bindingSignaler: BindingSignaler) {
-    this._bindingEngine = bindingEngine;
-    this._bindingSignaler = bindingSignaler;
+  constructor(private readonly _bindingEngine: BindingEngine, private readonly _bindingSignaler: BindingSignaler) {
   }
 
   public attached() {

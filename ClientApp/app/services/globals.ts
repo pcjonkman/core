@@ -1,4 +1,10 @@
+import * as moment from 'moment';
 import * as toastr from 'toastr';
+
+export namespace Const {
+  export var closingDate: string = "2018-05-19T00:00:00";
+  export var isWC: boolean = true;
+}
 
 export var global = {
   toastr: function toast(msg, error = false) {
@@ -11,6 +17,15 @@ export var global = {
   imageUrl: function(code: string) {
     if (code === null || code === undefined) { return ''; }
     return require(`../../../node_modules/flag-icon-css/flags/4x3/${ code.toLowerCase() }.svg`);
+  },
+  formatDate(value: string, format: string): string {
+    const date: moment.Moment = moment.utc(value);
+
+    if (date.isValid()) {
+      return date.format(format);
+    }
+
+    return value;
   }
 }
 

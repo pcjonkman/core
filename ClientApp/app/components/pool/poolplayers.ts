@@ -7,13 +7,9 @@ import { Router } from 'aurelia-router';
 
 @autoinject()
 export class PoolPlayers {
-  private _http: HttpClient;
-  private _router: Router;
   public pool: IPoolPoolPlayer;
 
-  constructor(http: HttpClient, router: Router) {
-      this._http = http;
-      this._router = router;
+  constructor(private readonly _http: HttpClient, private readonly _router: Router) {
   }
 
   public activate() {

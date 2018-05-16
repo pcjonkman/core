@@ -5,7 +5,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as moment from 'moment';
 import { MomentInput } from 'moment';
-import { global, IPoolPrediction, IMatchPrediction, IFinalsPrediction, ICountry, IPoolResults, ISchedule } from '../../../services/globals';
+import { Const, global, IPoolPrediction, IMatchPrediction, IFinalsPrediction, ICountry, IPoolResults, ISchedule } from '../../../services/globals';
 import { BootstrapFormRenderer } from '../../../services/bootstrapFormRenderer';
 
 @autoinject()
@@ -28,18 +28,10 @@ export class PoolResult {
 
   public validationRules: ValidationRules;
 
-  private _closingDate: string = "2018-12-19T10:39:00"
-
-  private _bindingEngine: BindingEngine;
-  private _bindingSignaler: BindingSignaler;
-  private _http: HttpClient;
   private _subscriptions: Subscription[] = [];
   public controller: ValidationController;
 
-  constructor(bindingEngine: BindingEngine, bindingSignaler: BindingSignaler, http: HttpClient, private validator: Validator, controllerFactory: ValidationControllerFactory) {
-    this._bindingEngine = bindingEngine;
-    this._bindingSignaler = bindingSignaler;
-    this._http = http;
+  constructor(private readonly _bindingEngine: BindingEngine, private readonly _bindingSignaler: BindingSignaler, private readonly _http: HttpClient, private validator: Validator, controllerFactory: ValidationControllerFactory) {
     this.controller = controllerFactory.createForCurrentScope(validator);
     this.controller.addRenderer(new BootstrapFormRenderer());
     this.setupValidation();
@@ -163,16 +155,16 @@ export class PoolResult {
         true : false;
   }
 
-  @computedFrom('_closingDate')
+  @computedFrom('Const.closingDate')
   public get isClosed(): boolean {
     const now: moment.Moment = moment.utc();
-    const closingDate: moment.Moment = this._closingDate === undefined ? now : moment.utc(this._closingDate as MomentInput);
+    const closingDate: moment.Moment = Const.closingDate === undefined ? now : moment.utc(Const.closingDate as MomentInput);
     return now.isSameOrAfter(closingDate)
   }
 
-  @computedFrom('_closingDate')
+  @computedFrom('Const.closingDate')
   public get closingDate(): string {
-    return moment.utc(this._closingDate).local().format('DD-MM-YYYY hh:mm');
+    return moment.utc(Const.closingDate).format('DD-MM-YYYY HH:mm');
   }
 
   public isAdmin(roles: string[]): boolean {
@@ -193,13 +185,7 @@ export class PoolResult {
   }
 
   public formatDate(value: string, format: string): string {
-    const date: moment.Moment = moment.utc(value);
-
-    if (date.isValid()) {
-      return date.local().format(format);
-    }
-
-    return value;
+    return global.formatDate(value, format);
   }
 
   public result(schedule: IMatchPrediction): string {
@@ -227,12 +213,16 @@ export class PoolResult {
   }
 
   public isFinals(schedule: ISchedule) {
-    return (!(schedule.group === 'A' || 
+    return (!(
+            schedule.group === 'A' || 
             schedule.group === 'B' || 
             schedule.group === 'C' || 
             schedule.group === 'D' || 
             schedule.group === 'E' || 
-            schedule.group === 'F'));
+            schedule.group === 'F' || 
+            schedule.group === 'G' && Const.isWC || 
+            schedule.group === 'H' && Const.isWC
+          ));
   }
 
   public changeSelected(schedule: ISchedule, country: ICountry, home: boolean) {

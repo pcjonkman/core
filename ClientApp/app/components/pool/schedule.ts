@@ -7,14 +7,10 @@ import { global, IPoolSchedule, ISchedule, IPoule, IPoolCountry, ICountry } from
 
 @autoinject()
 export class Schedule {
-  private _bindingSignaler: BindingSignaler;
-  private _http: HttpClient;
   private _pool: IPoolSchedule;
   private _countries: ICountry[];
 
-  constructor(bindingSignaler: BindingSignaler, http: HttpClient) {
-    this._bindingSignaler = bindingSignaler;
-    this._http = http;
+  constructor(private readonly _bindingSignaler: BindingSignaler, private readonly _http: HttpClient) {
   }
 
   public activate() {

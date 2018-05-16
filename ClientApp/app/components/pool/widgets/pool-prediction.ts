@@ -5,7 +5,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as moment from 'moment';
 import { MomentInput } from 'moment';
-import { global, IPoolPrediction, IMatchPrediction, IFinalsPrediction, ICountry } from '../../../services/globals';
+import { Const, global, IPoolPrediction, IMatchPrediction, IFinalsPrediction, ICountry } from '../../../services/globals';
 import { BootstrapFormRenderer } from '../../../services/bootstrapFormRenderer';
 
 @autoinject()
@@ -15,11 +15,15 @@ export class PoolPrediction {
   @bindable public countries: ICountry[] = [];
   public countries1: ICountry[] = [];
   public countries2: ICountry[] = [];
+  public countries13: ICountry[] = [];
+  public countries23: ICountry[] = [];
   public countries4: ICountry[] = [];
   public countries8: ICountry[] = [];
   public countries16: ICountry[] = [];
   public selectedCountries1: ICountry[] = [];
   public selectedCountries2: ICountry[] = [];
+  public selectedCountries13: ICountry[] = [];
+  public selectedCountries23: ICountry[] = [];
   public selectedCountries4: ICountry[] = [];
   public selectedCountries8: ICountry[] = [];
   public selectedCountries16: ICountry[] = [];
@@ -27,18 +31,10 @@ export class PoolPrediction {
 
   public predictionRules: ValidationRules;
 
-  private _closingDate: string = "2018-05-01T00:00:00"
-
-  private _bindingEngine: BindingEngine;
-  private _bindingSignaler: BindingSignaler;
-  private _http: HttpClient;
   private _subscriptions: Subscription[] = [];
   public controller: ValidationController;
 
-  constructor(bindingEngine: BindingEngine, bindingSignaler: BindingSignaler, http: HttpClient, private validator: Validator, controllerFactory: ValidationControllerFactory) {
-    this._bindingEngine = bindingEngine;
-    this._bindingSignaler = bindingSignaler;
-    this._http = http;
+  constructor(private readonly _bindingEngine: BindingEngine, private readonly _bindingSignaler: BindingSignaler, private readonly _http: HttpClient, private validator: Validator, controllerFactory: ValidationControllerFactory) {
     this.controller = controllerFactory.createForCurrentScope(validator);
     this.controller.addRenderer(new BootstrapFormRenderer());
     this.setupValidation();
@@ -49,6 +45,8 @@ export class PoolPrediction {
       this.countries.sort((a: ICountry, b: ICountry) => { return a.name > b.name ? 1 : -1; });
       this.countries1 = this.countries.slice(0);
       this.countries2 = this.countries.slice(0);
+      this.countries13 = this.countries.slice(0);
+      this.countries23 = this.countries.slice(0);
       this.countries4 = this.countries.slice(0);
       this.countries8 = this.countries.slice(0);
       this.countries16 = this.countries.slice(0);
@@ -60,8 +58,12 @@ export class PoolPrediction {
       this.selectedCountries4 = [];
       this.selectedCountries2 = [];
       this.selectedCountries1 = [];
+      this.selectedCountries23= [];
+      this.selectedCountries13 = [];
       this.countries1 = this.countries.slice(0);
       this.countries2 = this.countries.slice(0);
+      this.countries13 = this.countries.slice(0);
+      this.countries23 = this.countries.slice(0);
       this.countries4 = this.countries.slice(0);
       this.countries8 = this.countries.slice(0);
       this.countries16 = this.countries.slice(0);
@@ -86,6 +88,14 @@ export class PoolPrediction {
           case 5:
             this.selectedCountries1.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
             this.countries1.splice(this.countries1.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
+            break;
+          case 6:
+            this.selectedCountries23.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
+            this.countries23.splice(this.countries1.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
+            break;
+          case 7:
+            this.selectedCountries13.push(this.countries.find((c: ICountry) => { return c.id === fp.countryId; }));
+            this.countries13.splice(this.countries1.findIndex((c: ICountry) => { return c.id === fp.countryId; }), 1);
             break;
         }
       });
@@ -141,6 +151,7 @@ export class PoolPrediction {
     if (this.disable) { return true; }
     if (!this.pool || !this.pool.user) { return true; }
     if (this.isAdmin(this.pool.user.roles)) { return false; }
+    if (this.pool.poolPlayer == null) { return false; }
 
     return (
       !this.pool.user.isLoggedIn ||
@@ -153,13 +164,18 @@ export class PoolPrediction {
   @computedFrom('_closingDate')
   public get isClosed(): boolean {
     const now: moment.Moment = moment.utc();
-    const closingDate: moment.Moment = this._closingDate === undefined ? now : moment.utc(this._closingDate as MomentInput);
+    const closingDate: moment.Moment = Const.closingDate === undefined ? now : moment.utc(Const.closingDate as MomentInput);
     return now.isSameOrAfter(closingDate)
   }
 
-  @computedFrom('_closingDate')
+  @computedFrom('Const.closingDate')
   public get closingDate(): string {
-    return moment.utc(this._closingDate).local().format('DD-MM-YYYY hh:mm');
+    return moment.utc(Const.closingDate).format('DD-MM-YYYY HH:mm');
+  }
+
+  @computedFrom('Const.isWC')
+  public get isWC(): boolean {
+    return Const.isWC;
   }
 
   public predictedCountries(level: number) {
@@ -184,13 +200,7 @@ export class PoolPrediction {
   }
 
   public formatDate(value: string, format: string): string {
-    const date: moment.Moment = moment.utc(value);
-
-    if (date.isValid()) {
-      return date.local().format(format);
-    }
-
-    return value;
+    return global.formatDate(value, format);
   }
 
   public result(schedule: IMatchPrediction): string {
@@ -233,6 +243,12 @@ export class PoolPrediction {
     });
     this.selectedCountries1.forEach((country: ICountry) => {
       this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 5, subScore: 0 });
+    });
+    this.selectedCountries23.forEach((country: ICountry) => {
+      this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 6, subScore: 0 });
+    });
+    this.selectedCountries13.forEach((country: ICountry) => {
+      this.pool.finals.push({ country: country.name, countryCode: country.code, countryId: country.id, level: 7, subScore: 0 });
     });
     this.controller.validate({ object: this.pool, propertyName: 'match', rules: this.predictionRules })
       .then(result => {
