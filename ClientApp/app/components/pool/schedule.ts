@@ -7,6 +7,7 @@ import { global, IPoolSchedule, ISchedule, IPoule, IPoolCountry, ICountry } from
 
 @autoinject()
 export class Schedule {
+  public scheduleByDate: ISchedule[] = [];
   private _pool: IPoolSchedule;
   private _countries: ICountry[];
 
@@ -59,6 +60,18 @@ export class Schedule {
   @computedFrom('_pool', '_country')
   public get pool(): IPoolSchedule {
     return this._pool;
+  }
+
+  @computedFrom('_pool')
+  public get scheduleDate(): ISchedule[] {
+    let schedule: ISchedule[] = this._pool ? this._pool.schedule : [];
+    schedule = schedule.map((item: ISchedule) => {
+      return Object.assign({}, item, { startDate: item.startDate.substr(0, 10) });
+    }).filter((obj, pos, arr) => { // remove duplicate startDate
+      return arr.map(mapObj => mapObj['startDate']).indexOf(obj['startDate']) === pos;
+    });
+
+    return schedule;
   }
 
   public scheduleCountry(countryId: number): ISchedule[] {
@@ -143,4 +156,13 @@ export class Schedule {
 
     return poule;
   }
- }
+
+  public formatDate(value: string, format: string): string {
+    return global.formatDate(value, format);
+  }
+
+  public selectSchedule(schedule: ISchedule) {
+    this.scheduleByDate = this._pool ? this._pool.schedule.filter((item: ISchedule) => { return item.startDate.substr(0, 10) === schedule.startDate.substr(0, 10); }) : [];
+    window.setTimeout(() => { this._bindingSignaler.signal('data'); }, 0);
+  }
+}

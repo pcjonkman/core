@@ -290,103 +290,103 @@ namespace Core.Models
                     // context.MatchFinals.Add(new MatchFinals { Id = 51, StartDate = DateTime.ParseExact("2016-07-10 21:00:00", format, culture), GoalsCountry1 = -1, GoalsCountry2 = -1, Location = "Parijs", Country1Text = "Winnaar 49", Country2Text = "Winnaar 50", LevelNumber = 4 });
                     context.SaveChanges();
                 }
-                if (!context.PoolPlayer.Any() && isDevelopment) {
-                  var user = context.Users.SingleOrDefault(u => u.OwnerId == ownerId);
-                  context.PoolPlayer.Add(new PoolPlayer { Id = 1, Name = "Admin", UserId = user.Id, OpenQuestions = "Open Questions" });
-                  context.SaveChanges();
-                }
-                if (!context.PoolMessage.Any() && isDevelopment) {
-                  context.PoolMessage.Add(new PoolMessage { Id = 1, PoolPlayerId = 1, PlacedDate = DateTime.UtcNow, Message = "Welcome to the pool", Status = Core.Models.Pool.PoolMessage.MessageStatus.Approved });
-                  context.SaveChanges();
-                }
-                if (!context.MatchPrediction.Any() && isDevelopment) {
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 1, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 2, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 3, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 4, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 5, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 6, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 7, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 8, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 9, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 10, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 11, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 12, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 13, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 14, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 15, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 16, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 17, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 18, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 19, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 20, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 21, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 22, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 23, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 24, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 25, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 26, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 27, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 28, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 29, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 30, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 31, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 32, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 33, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 34, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 35, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 36, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 37, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 38, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 39, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 40, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 41, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 42, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 43, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 44, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 45, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 46, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 47, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.MatchPrediction.Add(new MatchPrediction { MatchId = 48, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
-                  context.SaveChanges();
-                }
-                if (!context.FinalsPrediction.Any() && isDevelopment) {
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 1 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 2 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 3 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 4 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 5 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 6 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 7 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 8 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 9 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 10 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 11 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 12 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 13 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 14 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 15 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 16 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 1 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 2 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 3 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 4 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 5 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 6 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 7 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 8 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 1 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 2 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 3 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 4 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 4, CountryId = 1 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 4, CountryId = 2 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 5, CountryId = 1 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 6, CountryId = 3 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 6, CountryId = 4 });
-                  context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 7, CountryId = 3 });
-                  context.SaveChanges();
-                }
+                // if (!context.PoolPlayer.Any() && isDevelopment) {
+                //   var user = context.Users.SingleOrDefault(u => u.OwnerId == ownerId);
+                //   context.PoolPlayer.Add(new PoolPlayer { Id = 1, Name = "Admin", UserId = user.Id, OpenQuestions = "Open Questions" });
+                //   context.SaveChanges();
+                // }
+                // if (!context.PoolMessage.Any() && isDevelopment) {
+                //   context.PoolMessage.Add(new PoolMessage { Id = 1, PoolPlayerId = 1, PlacedDate = DateTime.UtcNow, Message = "Welcome to the pool", Status = Core.Models.Pool.PoolMessage.MessageStatus.Approved });
+                //   context.SaveChanges();
+                // }
+                // if (!context.MatchPrediction.Any() && isDevelopment) {
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 1, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 2, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 3, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 4, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 5, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 6, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 7, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 8, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 9, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 10, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 11, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 12, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 13, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 14, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 15, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 16, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 17, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 18, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 19, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 20, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 21, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 22, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 23, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 24, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 25, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 26, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 27, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 28, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 29, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 30, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 31, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 32, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 33, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 34, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 35, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 36, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 37, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 38, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 39, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 40, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 41, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 42, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 43, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 44, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 45, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 46, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 47, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.MatchPrediction.Add(new MatchPrediction { MatchId = 48, PoolPlayerId = 1, GoalsCountry1 = 0, GoalsCountry2 = 0 });
+                //   context.SaveChanges();
+                // }
+                // if (!context.FinalsPrediction.Any() && isDevelopment) {
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 1 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 2 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 3 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 4 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 5 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 6 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 7 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 8 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 9 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 10 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 11 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 12 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 13 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 14 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 15 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 1, CountryId = 16 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 1 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 2 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 3 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 4 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 5 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 6 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 7 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 2, CountryId = 8 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 1 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 2 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 3 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 3, CountryId = 4 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 4, CountryId = 1 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 4, CountryId = 2 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 5, CountryId = 1 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 6, CountryId = 3 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 6, CountryId = 4 });
+                //   context.FinalsPrediction.Add(new FinalsPrediction { PoolPlayerId = 1, FinalsId = 7, CountryId = 3 });
+                //   context.SaveChanges();
+                // }
             }
         }
 

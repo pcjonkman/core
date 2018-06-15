@@ -144,7 +144,7 @@ export class PoolResult {
   @computedFrom('pool', 'controller', 'isClosed', 'disable')
   public get isDisabled(): boolean {
     if (this.disable) { return true; }
-    if (!this.pool || !this.pool.user) { return true; }
+    if (!this.pool || !this.pool.user || !this.pool.poolPlayer) { return true; }
     if (!this.isAdmin(this.pool.user.roles)) { return true; }
 
     return (

@@ -38,6 +38,9 @@
           </ul>
       </div>
     </div>
+    <div else if.bind="pool">
+      Er zijn geen poolplayers.
+    </div>
 
     <div class="new-message pull-right">
       <button if.bind="pool.user.isLoggedIn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal" click.delegate="selectMessage()"><span class="glyphicon glyphicon-plus"></span> New Message</button>

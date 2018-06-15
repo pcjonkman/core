@@ -14,6 +14,15 @@
 
         <!-- Nav tabs -->
         <ul if.bind="pool" class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              Date <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li role="presentation" repeat.for="schedule of scheduleDate & signal:'data'"><a click.trigger="$parent.selectSchedule(schedule)" href="#overview_date" aria-controls="overview_date" role="tab" data-toggle="tab">${ $parent.formatDate(schedule.startDate, 'dd D MMMM') }</a>   
+              </li>
+            </ul>
+          </li>
           <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
           <li role="presentation"><a href="#group" aria-controls="group" role="tab" data-toggle="tab">Group</a></li>
           <li role="presentation"><a href="#country" aria-controls="country" role="tab" data-toggle="tab">Country</a></li>
@@ -24,6 +33,11 @@
           <div role="tabpanel" class="tab-pane active" id="overview">
 
             <pool-schedule items.bind="pool.schedule & signal:'data'"></pool-schedule>
+
+          </div>
+          <div role="tabpanel" class="tab-pane" id="overview_date">
+
+            <pool-schedule items.bind="scheduleByDate & signal:'data'"></pool-schedule>
 
           </div>
           <div role="tabpanel" class="tab-pane" id="group">

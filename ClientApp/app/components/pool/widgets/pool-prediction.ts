@@ -149,9 +149,8 @@ export class PoolPrediction {
   @computedFrom('pool', 'controller', 'isClosed', 'disable')
   public get isDisabled(): boolean {
     if (this.disable) { return true; }
-    if (!this.pool || !this.pool.user) { return true; }
-    if (this.isAdmin(this.pool.user.roles)) { return false; }
-    if (this.pool.poolPlayer == null) { return false; }
+    if (!this.pool || !this.pool.user || !this.pool.poolPlayer) { return true; }
+    if (!this.isAdmin(this.pool.user.roles)) { return true; }
 
     return (
       !this.pool.user.isLoggedIn ||
@@ -161,7 +160,7 @@ export class PoolPrediction {
         true : false;
   }
 
-  @computedFrom('_closingDate')
+  @computedFrom('Const.closingDate')
   public get isClosed(): boolean {
     const now: moment.Moment = moment.utc();
     const closingDate: moment.Moment = Const.closingDate === undefined ? now : moment.utc(Const.closingDate as MomentInput);
