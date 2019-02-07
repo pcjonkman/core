@@ -1,5 +1,6 @@
 import { autoinject, bindable } from 'aurelia-framework';
 import { global, ISchedule, ICountry } from '../../../services/globals'
+import * as moment from 'moment';
 
 @autoinject()
 export class PoolSchedule {
@@ -7,7 +8,14 @@ export class PoolSchedule {
   @bindable public items: ISchedule[] = [];
 
   public formatDate(value: string, format: string): string {
-    return global.formatDate(value, format);
+    // return global.formatDate(value, format);
+    const date: moment.Moment = moment.utc(value);
+
+    if (date.isValid()) {
+      return date.format(format);
+    }
+
+    return value;
   }
 
   public result(schedule: ISchedule): string {

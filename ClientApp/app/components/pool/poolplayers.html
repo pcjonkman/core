@@ -1,4 +1,5 @@
 <template>
+  <require from="./poolplayers.scss"></require>
   <div id="poolplayers">
     <h3>Pooltjuh poolplayers
       <span if.bind="pool.user.isLoggedIn" class="user pull-right" click.delegate="edit(pool.user.user.id)">

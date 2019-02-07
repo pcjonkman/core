@@ -252,22 +252,22 @@ namespace Core.Models
                     CultureInfo culture = CultureInfo.InvariantCulture;
                     var items = new List<(int, int, string, string, string, string)>
                     {
-                      (49, 1, "2016-06-30 16:00:00", "Kazan", "1e Poule C", "2e Poule D"),
-                      (50, 1, "2016-06-30 20:00:00", "Sotsji", "1e Poule A", "2e Poule B"),
-                      (51, 1, "2016-07-01 16:00:00", "Moskou (Loezjniki)", "1e Poule B", "2e Poule A"),
-                      (52, 1, "2016-07-01 20:00:00", "Nizjni Novgorod", "1e Poule D", "2e Poule C"),
-                      (53, 1, "2016-07-02 16:00:00", "Samara", "1e Poule E", "2e Poule F"),
-                      (54, 1, "2016-07-02 20:00:00", "Rostov a/d Don", "1e Poule G", "2e Poule H"),
-                      (55, 1, "2016-07-03 16:00:00", "Sint-Petersburg", "1e Poule F", "2e Poule E"),
-                      (56, 1, "2016-07-03 20:00:00", "Moskou (Spartak)", "1e Poule H", "2e Poule G"),
-                      (57, 2, "2016-07-06 16:00:00", "Nizjni Novgorod", "Winnaar 49", "Winnaar 50"),
-                      (58, 2, "2016-07-06 20:00:00", "Kazan", "Winnaar 53", "Winnaar 54"),
-                      (59, 2, "2016-07-07 16:00:00", "Samara", "Winnaar 55", "Winnaar 56"),
-                      (60, 2, "2016-07-07 20:00:00", "Sotsji", "Winnaar 51", "Winnaar 52"),
-                      (61, 3, "2016-07-10 20:00:00", "Sint-Petersburg", "Winnaar 57", "Winnaar 58"),
-                      (62, 3, "2016-07-11 20:00:00", "Moskou (Loezjniki)", "Winnaar 59", "Winnaar 60"),
-                      (63, 6, "2016-07-14 16:00:00", "Sint-Petersburg", "Verliezer 61", "Verliezer 62"),
-                      (64, 4, "2016-07-15 17:00:00", "Moskou (Loezjniki)", "Winnaar 61", "Winnaar 62")
+                      (49, 1, "2018-06-30 16:00:00", "Kazan", "1e Poule C", "2e Poule D"),
+                      (50, 1, "2018-06-30 20:00:00", "Sotsji", "1e Poule A", "2e Poule B"),
+                      (51, 1, "2018-07-01 16:00:00", "Moskou (Loezjniki)", "1e Poule B", "2e Poule A"),
+                      (52, 1, "2018-07-01 20:00:00", "Nizjni Novgorod", "1e Poule D", "2e Poule C"),
+                      (53, 1, "2018-07-02 16:00:00", "Samara", "1e Poule E", "2e Poule F"),
+                      (54, 1, "2018-07-02 20:00:00", "Rostov a/d Don", "1e Poule G", "2e Poule H"),
+                      (55, 1, "2018-07-03 16:00:00", "Sint-Petersburg", "1e Poule F", "2e Poule E"),
+                      (56, 1, "2018-07-03 20:00:00", "Moskou (Spartak)", "1e Poule H", "2e Poule G"),
+                      (57, 2, "2018-07-06 16:00:00", "Nizjni Novgorod", "Winnaar 49", "Winnaar 50"),
+                      (58, 2, "2018-07-06 20:00:00", "Kazan", "Winnaar 53", "Winnaar 54"),
+                      (59, 2, "2018-07-07 16:00:00", "Samara", "Winnaar 55", "Winnaar 56"),
+                      (60, 2, "2018-07-07 20:00:00", "Sotsji", "Winnaar 51", "Winnaar 52"),
+                      (61, 3, "2018-07-10 20:00:00", "Sint-Petersburg", "Winnaar 57", "Winnaar 58"),
+                      (62, 3, "2018-07-11 20:00:00", "Moskou (Loezjniki)", "Winnaar 59", "Winnaar 60"),
+                      (63, 6, "2018-07-14 16:00:00", "Sint-Petersburg", "Verliezer 61", "Verliezer 62"),
+                      (64, 4, "2018-07-15 17:00:00", "Moskou (Loezjniki)", "Winnaar 61", "Winnaar 62")
                     };
                     foreach((int id, int level, string date, string location, string country1, string country2) item in items)
                     {

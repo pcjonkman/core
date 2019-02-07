@@ -3,7 +3,7 @@ import {
   RenderInstruction,
   ValidateResult
 } from 'aurelia-validation';
-
+import './bootstrapFormRenderer.scss';
 
 export class BootstrapFormRenderer {
   render(instruction: RenderInstruction) {
